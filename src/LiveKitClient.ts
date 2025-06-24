@@ -166,7 +166,7 @@ export default class LiveKitClient {
   }
 
   addConnectionQualityIndicator(userId: string): void {
-    if (!getGame().settings.get(MODULE_NAME, "displayConnectionQuality")) {
+    if (!getGame().settings.get(MODULE_NAME as any, "displayConnectionQuality")) {
       // Connection quality indicator is not enabled
       return;
     }
@@ -535,7 +535,7 @@ export default class LiveKitClient {
     };
 
     // Set audio parameters for music streaming mode
-    if (getGame().settings.get(MODULE_NAME, "audioMusicMode")) {
+    if (getGame().settings.get(MODULE_NAME as any, "audioMusicMode")) {
       audioCaptureOptions.autoGainControl = false;
       audioCaptureOptions.echoCancellation = false;
       audioCaptureOptions.noiseSuppression = false;
@@ -866,7 +866,7 @@ export default class LiveKitClient {
   onConnectionQualityChanged(quality: string, participant: Participant) {
     log.debug("onConnectionQualityChanged:", quality, participant);
 
-    if (!getGame().settings.get(MODULE_NAME, "displayConnectionQuality")) {
+    if (!getGame().settings.get(MODULE_NAME as any, "displayConnectionQuality")) {
       // Connection quality indicator is not enabled
       return;
     }
@@ -1533,7 +1533,7 @@ export default class LiveKitClient {
       videoSimulcastLayers: [VideoPresets43.h180, VideoPresets43.h360],
     };
 
-    if (getGame().settings.get(MODULE_NAME, "audioMusicMode")) {
+    if (getGame().settings.get(MODULE_NAME as any, "audioMusicMode")) {
       const audioMusicModeRate =
         ((getGame().settings.get(
           MODULE_NAME,

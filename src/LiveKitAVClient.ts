@@ -31,7 +31,7 @@ export default class LiveKitAVClient extends AVClient {
 
     this._liveKitClient = new LiveKitClient(this);
     this.room = null;
-    this.master.config = new LiveKitAVConfig(master);
+    this.master.config = new LiveKitAVConfig() as any;
   }
 
   /* -------------------------------------------- */
@@ -90,7 +90,7 @@ export default class LiveKitAVClient extends AVClient {
     }
 
     // Don't fully initialize if client has enabled the option to use the external web client
-    if (getGame().settings.get(MODULE_NAME, "useExternalAV")) {
+    if (getGame().settings.get(MODULE_NAME as any, "useExternalAV" as any)) {
       log.debug("useExternalAV set, not initializing LiveKitClient");
       this._liveKitClient.useExternalAV = true;
 
@@ -100,7 +100,7 @@ export default class LiveKitAVClient extends AVClient {
       });
 
       this._liveKitClient.initState = InitState.Initialized;
-      Hooks.callAll("liveKitClientInitialized", this._liveKitClient);
+      Hooks.callAll("liveKitClientInitialized" as any, this._liveKitClient);
       return;
     }
 
@@ -114,7 +114,7 @@ export default class LiveKitAVClient extends AVClient {
     this.settings.initialize();
 
     this._liveKitClient.initState = InitState.Initialized;
-    Hooks.callAll("liveKitClientInitialized", this._liveKitClient);
+    Hooks.callAll("liveKitClientInitialized" as any, this._liveKitClient);
   }
 
   /* -------------------------------------------- */
@@ -196,7 +196,7 @@ export default class LiveKitAVClient extends AVClient {
       this.master.config.render(true);
       log.error("LiveKit connection information missing");
       ui.notifications?.error(
-        `${getGame().i18n.localize(`${LANG_NAME}.connectionInfoMissing`)}`,
+        `${getGame().i18n?.localize(`${LANG_NAME}.connectionInfoMissing`)}`,
         { permanent: true }
       );
       this._liveKitClient.connectionState = ConnectionState.Disconnected;
@@ -212,7 +212,7 @@ export default class LiveKitAVClient extends AVClient {
       this.master.config.render(true);
       log.error("LiveKit Tavern connection information missing");
       ui.notifications?.error(
-        `${getGame().i18n.localize(`${LANG_NAME}.tavernAccountMissing`)}`,
+        `${getGame().i18n?.localize(`${LANG_NAME}.tavernAccountMissing`)}`,
         { permanent: true }
       );
       this._liveKitClient.connectionState = ConnectionState.Disconnected;
@@ -283,7 +283,7 @@ export default class LiveKitAVClient extends AVClient {
         liveKitServerType.label || liveKitServerType.key
       );
       ui.notifications?.error(
-        `${getGame().i18n.localize(`${LANG_NAME}.tokenError`)}`,
+        `${getGame().i18n?.localize(`${LANG_NAME}.tokenError`)}`,
         { permanent: true }
       );
       this._liveKitClient.connectionState = ConnectionState.Disconnected;
@@ -295,12 +295,12 @@ export default class LiveKitAVClient extends AVClient {
       : liveKitServerType.url;
 
     if (typeof liveKitAddress !== "string") {
-      const message = `${getGame().i18n.localize(
+      const message = `${getGame().i18n?.localize(
         liveKitServerType.label
       )} doesn't provide a URL`;
       log.error(message, liveKitServerType);
       ui.notifications?.error(
-        `${getGame().i18n.localize(`${LANG_NAME}.connectError`)}: ${message}`,
+        `${getGame().i18n?.localize(`${LANG_NAME}.connectError`)}: ${message}`,
         { permanent: true }
       );
       this._liveKitClient.connectionState = ConnectionState.Disconnected;
@@ -351,8 +351,8 @@ export default class LiveKitAVClient extends AVClient {
     }
 
     if (
-      getGame().settings.get(MODULE_NAME, "debug") &&
-      getGame().settings.get(MODULE_NAME, "liveKitTrace")
+      getGame().settings.get(MODULE_NAME as any, "debug" as any) &&
+      getGame().settings.get(MODULE_NAME as any, "liveKitTrace" as any)
     ) {
       log.debug("Setting livekit trace logging");
       setLogLevel(LogLevel.trace);
@@ -386,7 +386,7 @@ export default class LiveKitAVClient extends AVClient {
 
       // TODO: Add some incremental back-off reconnect logic here
       ui.notifications?.error(
-        `${getGame().i18n.localize(`${LANG_NAME}.connectError`)}: ${message}`,
+        `${getGame().i18n?.localize(`${LANG_NAME}.connectError`)}: ${message}`,
         { permanent: true }
       );
       this._liveKitClient.setConnectionButtons(false);
@@ -509,7 +509,7 @@ export default class LiveKitAVClient extends AVClient {
     log.debug("getConnectedUsers");
 
     // If useExternalAV is enabled, return empty array
-    if (getGame().settings.get(MODULE_NAME, "useExternalAV")) {
+    if (getGame().settings.get(MODULE_NAME as any, "useExternalAV" as any)) {
       return [];
     }
 

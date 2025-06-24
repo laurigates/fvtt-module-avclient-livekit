@@ -83,7 +83,7 @@ Hooks.on("ready", () => {
 });
 
 // Listen for DebugSet event
-Hooks.on(`${MODULE_NAME}DebugSet`, (value: boolean) => {
+Hooks.on(`${MODULE_NAME}DebugSet` as any, (value: boolean) => {
   // Enable debug logging if debug setting is true
   CONFIG.debug.av = value;
   CONFIG.debug.avclient = value;
@@ -91,10 +91,10 @@ Hooks.on(`${MODULE_NAME}DebugSet`, (value: boolean) => {
 
 // Add context options on getUserContextOptions
 Hooks.on(
-  "getUserContextOptions",
+  "getUserContextOptions" as any,
   async (
-    playersElement: JQuery<HTMLElement>,
-    contextOptions: ContextMenuEntry[]
+    playersElement: any,
+    contextOptions: any[]
   ) => {
     if (getGame().webrtc?.client?._liveKitClient) {
       getGame().webrtc?.client._liveKitClient.onGetUserContextOptions(

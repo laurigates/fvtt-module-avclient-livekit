@@ -21,14 +21,14 @@ export default function registerModuleSettings(): void {
     onChange: () => {
       // Re-register settings to update visibility of audioMusicModeRate
       registerModuleSettings();
-      getGame().webrtc?.client._liveKitClient.changeAudioSource(true);
+      getGame().webrtc?.client._liveKitClient?.changeAudioSource(true);
     },
   });
 
   registerModuleSetting<number>({
     name: "audioMusicModeRate",
     scope: "client",
-    config: getGame().settings.get(MODULE_NAME, "audioMusicMode") === true,
+    config: getGame().settings.get(MODULE_NAME as any, "audioMusicMode" as any) === true,
     default: 96,
     type: Number,
     range: {
@@ -37,7 +37,7 @@ export default function registerModuleSettings(): void {
       step: 8,
     },
     onChange: () =>
-      getGame().webrtc?.client._liveKitClient.changeAudioSource(true),
+      getGame().webrtc?.client._liveKitClient?.changeAudioSource(true),
   });
 
   registerModuleSetting({
@@ -82,10 +82,10 @@ export default function registerModuleSettings(): void {
     config: true,
     default: false,
     type: Boolean,
-    onChange: (value) => {
+    onChange: (value: any) => {
       if (value === true && getGame().user?.isGM) {
         log.warn("Resetting meeting room ID");
-        getGame().settings.set(MODULE_NAME, "resetRoom", false);
+        getGame().settings.set(MODULE_NAME as any, "resetRoom" as any, false);
         getGame().webrtc?.client.settings.set(
           "world",
           "server.room",
@@ -106,13 +106,13 @@ export default function registerModuleSettings(): void {
   });
 
   // Set the initial debug level
-  log.setDebug(getGame().settings.get(MODULE_NAME, "debug") === true);
+  log.setDebug(getGame().settings.get(MODULE_NAME as any, "debug" as any) === true);
 
   // Register livekit trace logging setting
   registerModuleSetting({
     name: "liveKitTrace",
     scope: "world",
-    config: getGame().settings.get(MODULE_NAME, "debug") === true,
+    config: getGame().settings.get(MODULE_NAME as any, "debug" as any) === true,
     default: false,
     type: Boolean,
     onChange: () => delayReload(),

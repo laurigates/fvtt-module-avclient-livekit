@@ -128,7 +128,7 @@ export async function loadScript(scriptSrc: string): Promise<boolean> {
 export function registerModuleSetting<T>(
   settingsObject: ModuleSettingsObject<T>
 ): void {
-  getGame().settings.register(MODULE_NAME, settingsObject.name, {
+  getGame().settings.register(MODULE_NAME as any, settingsObject.name, {
     name: `${LANG_NAME}.${settingsObject.name}`,
     hint: `${LANG_NAME}.${settingsObject.name}Hint`,
     scope: settingsObject.scope,

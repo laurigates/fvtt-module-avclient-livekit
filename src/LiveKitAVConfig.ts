@@ -55,7 +55,7 @@ export default class LiveKitAVConfig extends AVConfig {
     return mergeObject(data, {
       isVersion10AV: isVersion10AV(),
       liveKitServerTypes:
-        getGame().webrtc?.client._liveKitClient.liveKitServerTypes,
+        getGame().webrtc?.client._liveKitClient?.liveKitServerTypes,
       liveKitSettings: this._getLiveKitSettings(),
       tavernAuthResponse: await this._patreonGetUserInfo(),
     });
@@ -158,7 +158,7 @@ export default class LiveKitAVConfig extends AVConfig {
     event.preventDefault();
     const choice = event.currentTarget.value;
     const liveKitServerType =
-      getGame().webrtc?.client._liveKitClient.liveKitServerTypes[choice];
+      getGame().webrtc?.client._liveKitClient?.liveKitServerTypes[choice];
     const current = this.object.settings.get("world", "livekit.type");
 
     if (!liveKitServerType) {
