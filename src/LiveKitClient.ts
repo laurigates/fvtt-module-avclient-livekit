@@ -120,7 +120,7 @@ export default class LiveKitClient {
     }
 
     // Set up all other users
-    this.liveKitRoom.participants.forEach((participant: RemoteParticipant) => {
+    this.liveKitRoom.remoteParticipants.forEach((participant: RemoteParticipant) => {
       this.onParticipantConnected(participant);
     });
   }
@@ -583,7 +583,7 @@ export default class LiveKitClient {
       return "";
     }
 
-    for (const t of participant.tracks.values()) {
+    for (const t of participant.getTrackPublications()) {
       if (t.track) {
         totalBitrate += t.track.currentBitrate;
       }
@@ -962,7 +962,7 @@ export default class LiveKitClient {
     // Set up remote participant callbacks
     this.setRemoteParticipantCallbacks(participant);
 
-    participant.tracks.forEach((publication) => {
+    participant.getTrackPublications().forEach((publication) => {
       this.onTrackPublished(publication, participant);
     });
 
