@@ -565,15 +565,14 @@ export default class LiveKitClient {
       return audioTrack;
     }
 
-    this.liveKitParticipants.get(userId)?.audioTracks.forEach((publication) => {
-      if (
-        publication.kind === Track.Kind.Audio &&
-        (publication.track instanceof LocalAudioTrack ||
-          publication.track instanceof RemoteAudioTrack)
-      ) {
-        audioTrack = publication.track;
+    const participant = this.liveKitParticipants.get(userId);
+    if (participant) {
+      const publication = participant.getTrackPublication(Track.Source.Microphone);
+      if (publication?.audioTrack instanceof LocalAudioTrack ||
+          publication?.audioTrack instanceof RemoteAudioTrack) {
+        audioTrack = publication.audioTrack;
       }
-    });
+    }
     return audioTrack;
   }
 
@@ -615,15 +614,14 @@ export default class LiveKitClient {
       return videoTrack;
     }
 
-    this.liveKitParticipants.get(userId)?.videoTracks.forEach((publication) => {
-      if (
-        publication.kind === Track.Kind.Video &&
-        (publication.track instanceof LocalVideoTrack ||
-          publication.track instanceof RemoteVideoTrack)
-      ) {
-        videoTrack = publication.track;
+    const participant = this.liveKitParticipants.get(userId);
+    if (participant) {
+      const publication = participant.getTrackPublication(Track.Source.Camera);
+      if (publication?.videoTrack instanceof LocalVideoTrack ||
+          publication?.videoTrack instanceof RemoteVideoTrack) {
+        videoTrack = publication.videoTrack;
       }
-    });
+    }
     return videoTrack;
   }
 

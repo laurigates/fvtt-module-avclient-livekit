@@ -5,6 +5,7 @@ import {
   ConnectionState,
   setLogLevel,
   Room,
+  Track,
 } from "livekit-client";
 
 import { LANG_NAME, MODULE_NAME } from "./utils/constants";
@@ -653,11 +654,11 @@ export default class LiveKitAVClient extends AVClient {
       this._liveKitClient.videoTrack.mute();
     } else {
       // Ensure the video track is published to avoid an error when un-muting an unpublished track
+      const videoPublication = this._liveKitClient.liveKitRoom?.localParticipant.getTrackPublication(Track.Source.Camera);
       if (
         !this._liveKitClient.videoTrack.sid ||
-        !this._liveKitClient.liveKitRoom?.localParticipant.videoTracks.has(
-          this._liveKitClient.videoTrack.sid
-        )
+        !videoPublication ||
+        videoPublication.track !== this._liveKitClient.videoTrack
       ) {
         log.debug("toggleVideo unmute called but video track is not published");
         return;
