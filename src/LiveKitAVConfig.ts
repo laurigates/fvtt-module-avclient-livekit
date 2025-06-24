@@ -46,16 +46,11 @@ export default class LiveKitAVConfig extends AVConfig {
     return liveKitSettings;
   }
 
-  /** @override */
-  async getData(
-    options: any = {}
-  ): Promise<object> {
+  async getData(options: any = {}): Promise<object> {
     const data = await (super as any).getData(options);
-
     return foundry.utils.mergeObject(data, {
       isVersion10AV: isVersion10AV(),
-      liveKitServerTypes:
-        getGame().webrtc?.client._liveKitClient?.liveKitServerTypes,
+      liveKitServerTypes: getGame().webrtc?.client._liveKitClient?.liveKitServerTypes,
       liveKitSettings: this._getLiveKitSettings(),
       tavernAuthResponse: await this._patreonGetUserInfo(),
     });

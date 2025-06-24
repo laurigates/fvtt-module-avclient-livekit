@@ -26,7 +26,7 @@ Hooks.on("init", () => {
       if (getGame().webrtc?.client?._liveKitClient) {
         getGame()?.webrtc?.client._liveKitClient.onRenderCameraViews(
           cameraViews,
-          cameraViewsElement
+          $(cameraViewsElement)
         );
       }
     }
@@ -59,7 +59,7 @@ Hooks.on("ready", () => {
   if (!isVersion11AV()) {
     AVSettings.prototype.handleUserActivity = function handleUserActivity(
       userId: string,
-      settings: AVSettings
+      settings: any
     ) {
       const current = this.activity[userId] || {};
       this.activity[userId] = foundry.utils.mergeObject(current, settings, {

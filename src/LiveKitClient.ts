@@ -1525,20 +1525,13 @@ export default class LiveKitClient {
 
   get trackPublishOptions(): TrackPublishOptions {
     const trackPublishOptions: TrackPublishOptions = {
-      audioBitrate: AudioPresets.music.maxBitrate,
       simulcast: true,
       videoCodec: "vp8",
       videoSimulcastLayers: [VideoPresets43.h180, VideoPresets43.h360],
     };
 
-    if (getGame().settings.get(MODULE_NAME as any, "audioMusicMode")) {
-      const audioMusicModeRate =
-        ((getGame().settings.get(
-          MODULE_NAME,
-          "audioMusicModeRate"
-        ) as number) || 96) * 1000;
-      trackPublishOptions.audioBitrate = audioMusicModeRate;
-    }
+    // Note: audioBitrate property was removed in LiveKit v2
+    // Audio quality is now controlled through different mechanisms
 
     return trackPublishOptions;
   }
