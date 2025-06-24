@@ -31,7 +31,7 @@ export default class LiveKitAVConfig extends AVConfig {
       s.id = `${setting.namespace}.${setting.key}`;
       s.name = getGame().i18n?.localize(setting.name || "") || "";
       s.hint = getGame().i18n?.localize(setting.hint || "") || "";
-      s.value = getGame().settings.get(setting.namespace, setting.key);
+      s.value = (getGame().settings as any).get(setting.namespace, setting.key);
       s.settingType =
         setting.type instanceof Function ? setting.type.name : "String";
       s.isCheckbox = setting.type === Boolean;
@@ -278,7 +278,7 @@ export default class LiveKitAVConfig extends AVConfig {
     // GM only
     if (!getGame().user?.isGM) return;
     // Tavern only
-    if (this.object.settings.get("world", "livekit.type") !== "tavern") return;
+    if ((this as any).object.settings.get("world", "livekit.type") !== "tavern") return;
     const authServer =
       (getGame().webrtc?.client.settings.get(
         "world",

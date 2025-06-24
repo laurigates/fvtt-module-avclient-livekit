@@ -321,11 +321,11 @@ export default class LiveKitAVClient extends AVClient {
     };
 
     // Get disable audio/video settings
-    const disableReceivingAudio = getGame().settings.get(
+    const disableReceivingAudio = (getGame().settings as any).get(
       MODULE_NAME,
       "disableReceivingAudio"
     ) as boolean;
-    const disableReceivingVideo = getGame().settings.get(
+    const disableReceivingVideo = (getGame().settings as any).get(
       MODULE_NAME,
       "disableReceivingVideo"
     ) as boolean;
