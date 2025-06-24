@@ -6,8 +6,8 @@ import * as log from "./utils/logging";
 
 export default class LiveKitAVConfig extends AVConfig {
   /** @override */
-  static get defaultOptions(): FormApplicationOptions {
-    return mergeObject(super.defaultOptions, {
+  static get defaultOptions(): any {
+    return mergeObject((super as any).defaultOptions || {}, {
       template: "modules/avclient-livekit/templates/av-config.html",
     });
   }
@@ -29,8 +29,8 @@ export default class LiveKitAVConfig extends AVConfig {
       // Update setting data
       const s: LiveKitSettingsConfig = foundry.utils.deepClone(setting);
       s.id = `${s.namespace}.${s.key}`;
-      s.name = getGame().i18n.localize(s.name || "");
-      s.hint = getGame().i18n.localize(s.hint || "");
+      s.name = getGame().i18n?.localize(s.name || "") || "";
+      s.hint = getGame().i18n?.localize(s.hint || "") || "";
       s.value = getGame().settings.get(s.namespace, s.key);
       s.settingType =
         setting.type instanceof Function ? setting.type.name : "String";
@@ -48,7 +48,7 @@ export default class LiveKitAVConfig extends AVConfig {
 
   /** @override */
   async getData(
-    options: Partial<FormApplicationOptions> = {}
+    options: any = {}
   ): Promise<object> {
     const data = await super.getData(options);
 
@@ -99,7 +99,7 @@ export default class LiveKitAVConfig extends AVConfig {
       if (liveKitServerType.details !== undefined) {
         this._setSectionParagraphHtml(
           ".livekit-details",
-          getGame().i18n.localize(liveKitServerType.details)
+          getGame().i18n?.localize(liveKitServerType.details) || ""
         );
       }
       this._setConfigSectionVisible(
@@ -173,7 +173,7 @@ export default class LiveKitAVConfig extends AVConfig {
     if (liveKitServerType.details !== undefined) {
       this._setSectionParagraphHtml(
         ".livekit-details",
-        getGame().i18n.localize(liveKitServerType.details)
+        getGame().i18n?.localize(liveKitServerType.details) || ""
       );
     }
     this._setConfigSectionVisible(

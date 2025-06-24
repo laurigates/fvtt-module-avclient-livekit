@@ -81,16 +81,16 @@ export function getGame(): Game {
 
 // Returns if the current version is using the new v10 AV
 export function isVersion10AV(): boolean {
-  return isNewerVersion(
-    getGame().release.version || getGame().data.version || 0,
+  return foundry.utils.isNewerVersion(
+    getGame().release?.version || (getGame().data as any)?.version || "0",
     "10.265"
   );
 }
 
 // Returns if the current version is using the new v10 AV
 export function isVersion11AV(): boolean {
-  return isNewerVersion(
-    getGame().release.version || getGame().data.version || 0,
+  return foundry.utils.isNewerVersion(
+    getGame().release?.version || (getGame().data as any)?.version || "0",
     "11.292"
   );
 }

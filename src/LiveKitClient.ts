@@ -137,7 +137,7 @@ export default class LiveKitClient {
     }
 
     const connectButton = $(
-      `<a class="av-control toggle livekit-control connect hidden" title="${getGame().i18n.localize(
+      `<a class="av-control toggle livekit-control connect hidden" title="${getGame().i18n?.localize(
         `${LANG_NAME}.connect`
       )}"><i class="fas fa-toggle-off"></i></a>`
     );
@@ -148,7 +148,7 @@ export default class LiveKitClient {
     element.before(connectButton);
 
     const disconnectButton = $(
-      `<a class="av-control toggle livekit-control disconnect hidden" title="${getGame().i18n.localize(
+      `<a class="av-control toggle livekit-control disconnect hidden" title="${getGame().i18n?.localize(
         `${LANG_NAME}.disconnect`
       )}"><i class="fas fa-toggle-on"></i></a>`
     );
@@ -906,7 +906,7 @@ export default class LiveKitClient {
 
   onGetUserContextOptions(
     playersElement: JQuery<HTMLElement>,
-    contextOptions: ContextMenuEntry[]
+    contextOptions: any[]
   ): void {
     // Don't add breakout options if AV is disabled
     if (this.settings.get("world", "mode") === AVSettings.AV_MODES.DISABLED) {

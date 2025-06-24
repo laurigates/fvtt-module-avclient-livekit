@@ -337,14 +337,14 @@ export default class LiveKitAVClient extends AVClient {
       // Send UI notifications
       if (disableReceivingAudio) {
         ui.notifications?.info(
-          `${getGame().i18n.localize(
+          `${getGame().i18n?.localize(
             `${LANG_NAME}.disableReceivingAudioWarning`
           )}`
         );
       }
       if (disableReceivingVideo) {
         ui.notifications?.info(
-          `${getGame().i18n.localize(
+          `${getGame().i18n?.localize(
             `${LANG_NAME}.disableReceivingVideoWarning`
           )}`
         );
@@ -380,7 +380,7 @@ export default class LiveKitAVClient extends AVClient {
         String(message).includes("validation failed, token is expired") ||
         String(message).includes("validation failed, token not valid yet")
       ) {
-        message = `${getGame().i18n.localize(
+        message = `${getGame().i18n?.localize(
           `${LANG_NAME}.connectErrorCheckClock`
         )}`;
       }
@@ -488,7 +488,7 @@ export default class LiveKitAVClient extends AVClient {
       const devices = await Room.getLocalDevices(kind);
       return devices.reduce((obj: Record<string, string>, device) => {
         obj[device.deviceId] =
-          device.label || getGame().i18n.localize("WEBRTC.UnknownDevice");
+          device.label || getGame().i18n?.localize("WEBRTC.UnknownDevice");
         return obj;
       }, {});
     } catch (error: unknown) {
@@ -747,7 +747,7 @@ export default class LiveKitAVClient extends AVClient {
    * Handle changes to A/V configuration settings.
    * @param {object} changed      The settings which have changed
    */
-  onSettingsChanged(changed: DeepPartial<AVSettings.Settings>): void {
+  onSettingsChanged(changed: any): void {
     log.debug("onSettingsChanged:", changed);
     const keys = new Set(Object.keys(foundry.utils.flattenObject(changed)));
 
