@@ -324,11 +324,11 @@ export default class LiveKitAVClient extends AVClient {
     const disableReceivingAudio = getGame().settings.get(
       MODULE_NAME,
       "disableReceivingAudio"
-    );
+    ) as boolean;
     const disableReceivingVideo = getGame().settings.get(
       MODULE_NAME,
       "disableReceivingVideo"
-    );
+    ) as boolean;
 
     // Don't auto subscribe to tracks if either video or audio is disabled
     if (disableReceivingAudio || disableReceivingVideo) {
@@ -488,7 +488,7 @@ export default class LiveKitAVClient extends AVClient {
       const devices = await Room.getLocalDevices(kind);
       return devices.reduce((obj: Record<string, string>, device) => {
         obj[device.deviceId] =
-          device.label || getGame().i18n?.localize("WEBRTC.UnknownDevice");
+          device.label || getGame().i18n?.localize("WEBRTC.UnknownDevice") || "Unknown Device";
         return obj;
       }, {});
     } catch (error: unknown) {

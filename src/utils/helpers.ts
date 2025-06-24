@@ -14,10 +14,15 @@ interface DeviceInfo {
 }
 
 // Module Settings object
-interface ModuleSettingsObject<T = unknown>
-  extends Omit<SettingConfig<T>, "key" | "namespace"> {
+interface ModuleSettingsObject<T = unknown> {
   /** The name that will be used to generate the key, name, and hint*/
   name: string;
+  scope?: "world" | "client";
+  config?: boolean;
+  default?: T;
+  type?: any;
+  range?: any;
+  onChange?: (value: T) => void;
 }
 
 /**
@@ -58,7 +63,7 @@ export function deviceInfoToObject(
   for (let i = 0; i < list.length; i += 1) {
     if (list[i].kind === kind) {
       obj[list[i].deviceId] =
-        list[i].label || getGame().i18n.localize("WEBRTC.UnknownDevice");
+        list[i].label || getGame().i18n?.localize("WEBRTC.UnknownDevice") || "Unknown Device";
     }
   }
 
@@ -128,7 +133,7 @@ export async function loadScript(scriptSrc: string): Promise<boolean> {
 export function registerModuleSetting<T>(
   settingsObject: ModuleSettingsObject<T>
 ): void {
-  getGame().settings.register(MODULE_NAME as any, settingsObject.name, {
+  getGame().settings.register(MODULE_NAME, settingsObject.name, {
     name: `${LANG_NAME}.${settingsObject.name}`,
     hint: `${LANG_NAME}.${settingsObject.name}Hint`,
     scope: settingsObject.scope,

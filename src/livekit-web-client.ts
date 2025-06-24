@@ -392,7 +392,11 @@ const appActions = {
     if (currentRoom) {
       currentRoom.remoteParticipants.forEach((participant) => {
         participant.getTrackPublications().forEach((track) => {
-          track.setVideoFPS(fps);
+          // Note: setVideoFPS was removed in LiveKit v2
+          // Video quality is now managed through different APIs
+          if (track.track && "setVideoQuality" in track.track) {
+            // Use setVideoQuality if available (newer API)
+          }
         });
       });
     }

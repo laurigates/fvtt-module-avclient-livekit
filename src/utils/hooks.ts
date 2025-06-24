@@ -13,6 +13,7 @@ Hooks.on("init", () => {
   AVSettings.VOICE_MODES = {
     ALWAYS: "always",
     PTT: "ptt",
+    ACTIVITY: "activity",
   };
 
   // Register module settings
@@ -21,7 +22,7 @@ Hooks.on("init", () => {
   // Add renderCameraViews hook after init
   Hooks.on(
     "renderCameraViews",
-    (cameraViews: CameraViews, cameraViewsElement: JQuery<HTMLElement>) => {
+    (cameraViews: CameraViews, cameraViewsElement: HTMLElement) => {
       if (getGame().webrtc?.client?._liveKitClient) {
         getGame()?.webrtc?.client._liveKitClient.onRenderCameraViews(
           cameraViews,
@@ -58,7 +59,7 @@ Hooks.on("ready", () => {
   if (!isVersion11AV()) {
     AVSettings.prototype.handleUserActivity = function handleUserActivity(
       userId: string,
-      settings: AVSettingsData
+      settings: AVSettings
     ) {
       const current = this.activity[userId] || {};
       this.activity[userId] = foundry.utils.mergeObject(current, settings, {
@@ -71,13 +72,14 @@ Hooks.on("ready", () => {
         "muted" in settings && current.muted !== settings.muted;
       if (
         (hiddenChanged || mutedChanged) &&
-        ui.webrtc?.getUserVideoElement(userId)
+        ui.webrtc && 
+        "getUserVideoElement" in ui.webrtc &&
+        (ui.webrtc as any).getUserVideoElement(userId)
       ) {
-        // @ts-expect-error Using a protected method
-        ui.webrtc._refreshView(userId);
+        (ui.webrtc as any)._refreshView(userId);
       }
-      if ("speaking" in settings)
-        ui.webrtc?.setUserIsSpeaking(userId, settings.speaking || false);
+      if ("speaking" in settings && ui.webrtc && "setUserIsSpeaking" in ui.webrtc)
+        (ui.webrtc as any).setUserIsSpeaking(userId, settings.speaking || false);
     };
   }
 });
