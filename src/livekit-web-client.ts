@@ -1,7 +1,6 @@
 import {
   ConnectionQuality,
   ConnectionState,
-  DataPacket_Kind,
   DisconnectReason,
   LocalAudioTrack,
   LocalParticipant,
@@ -403,8 +402,8 @@ const appActions = {
     }
   },
 
-  handlePreferredFPS: (e: Event) => {
-    const fps = +(<HTMLSelectElement>e.target).value;
+  handlePreferredFPS: () => {
+    // Note: FPS setting was removed in LiveKit v2
     if (currentRoom) {
       currentRoom.remoteParticipants.forEach((participant) => {
         participant.getTrackPublications().forEach((track) => {

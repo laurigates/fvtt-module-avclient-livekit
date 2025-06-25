@@ -1,4 +1,3 @@
-import { LiveKitSettingsConfig } from "../types/avclient-livekit";
 import LiveKitClient from "./LiveKitClient";
 import { LANG_NAME, MODULE_NAME, TAVERN_AUTH_SERVER } from "./utils/constants";
 import { delayReload, getGame, isVersion10AV } from "./utils/helpers";
@@ -6,7 +5,7 @@ import * as log from "./utils/logging";
 
 export default class LiveKitAVConfig extends AVConfig {
   /** @override */
-  static get defaultOptions(): any {
+  static get defaultOptions(): ApplicationOptions {
     return foundry.utils.mergeObject(super.DEFAULT_OPTIONS || {}, {
       template: "modules/avclient-livekit/templates/av-config.html",
     });
@@ -27,18 +26,18 @@ export default class LiveKitAVConfig extends AVConfig {
         continue;
 
       // Update setting data
-      const s: any = foundry.utils.deepClone(setting);
+      const s: FoundrySettingConfig & Record<string, unknown> = foundry.utils.deepClone(setting);
       s.id = `${setting.namespace}.${setting.key}`;
       s.name = getGame().i18n?.localize(setting.name || "") || "";
       s.hint = getGame().i18n?.localize(setting.hint || "") || "";
-      s.value = (getGame().settings as any).get(setting.namespace, setting.key);
+      s.value = getGame().settings.get(setting.namespace, setting.key);
       s.settingType =
         setting.type instanceof Function ? setting.type.name : "String";
       s.isCheckbox = setting.type === Boolean;
       s.isSelect = setting.choices !== undefined;
       s.isRange = setting.type === Number && setting.range;
       s.isNumber = setting.type === Number;
-      s.filePickerType = (setting as any).filePicker === true ? "any" : (setting as any).filePicker;
+      s.filePickerType = setting.filePicker === true ? "any" : setting.filePicker;
 
       liveKitSettings.push(s);
     }
@@ -46,8 +45,8 @@ export default class LiveKitAVConfig extends AVConfig {
     return liveKitSettings;
   }
 
-  async getData(options: any = {}): Promise<object> {
-    const data = await (super as any).getData(options);
+  async getData(options: ApplicationOptions = {}): Promise<Record<string, unknown>> {
+    const data = await super.getData(options);
     return foundry.utils.mergeObject(data, {
       isVersion10AV: isVersion10AV(),
       liveKitServerTypes: getGame().webrtc?.client._liveKitClient?.liveKitServerTypes,
@@ -58,7 +57,7 @@ export default class LiveKitAVConfig extends AVConfig {
 
   /** @override */
   activateListeners(html: JQuery<HTMLElement>) {
-    (super as any).activateListeners(html);
+    super.activateListeners(html);
 
     // Options below are GM only
     if (!getGame().user?.isGM) return;
@@ -66,7 +65,7 @@ export default class LiveKitAVConfig extends AVConfig {
       .find('select[name="world.livekit.type"]')
       .on("change", this._onLiveKitTypeChanged.bind(this));
 
-    const settings = (this as any).object.settings;
+    const settings = (this as { object: { settings: FoundrySettings } }).object.settings;
     const liveKitClient = getGame().webrtc?.client._liveKitClient;
 
     if (liveKitClient instanceof LiveKitClient) {
@@ -154,7 +153,7 @@ export default class LiveKitAVConfig extends AVConfig {
     const choice = event.currentTarget.value;
     const liveKitServerType =
       getGame().webrtc?.client._liveKitClient?.liveKitServerTypes[choice];
-    const current = (this as any).object.settings.get("world", "livekit.type");
+    const current = (this as { object: { settings: FoundrySettings } }).object.settings.get("world", "livekit.type");
 
     if (!liveKitServerType) {
       log.warn("liveKitServerType", choice, "not found");
@@ -194,7 +193,11 @@ export default class LiveKitAVConfig extends AVConfig {
   _setConfigSectionVisible(selector: string, enabled = true) {
     const section = $(this.element).find(selector);
     if (section) {
-      enabled ? section.show() : section.hide();
+      if (enabled) {
+        section.show();
+      } else {
+        section.hide();
+      }
     }
     this.setPosition(this.position);
   }
@@ -278,7 +281,7 @@ export default class LiveKitAVConfig extends AVConfig {
     // GM only
     if (!getGame().user?.isGM) return;
     // Tavern only
-    if ((this as any).object.settings.get("world", "livekit.type") !== "tavern") return;
+    if ((this as { object: { settings: FoundrySettings } }).object.settings.get("world", "livekit.type") !== "tavern") return;
     const authServer =
       (getGame().webrtc?.client.settings.get(
         "world",

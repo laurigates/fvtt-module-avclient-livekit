@@ -24,7 +24,6 @@ import {
   VideoPresets43,
   VideoTrack,
   DisconnectReason,
-  AudioPresets,
   TrackPublishOptions,
   ScreenShareCaptureOptions,
 } from "livekit-client";
@@ -166,14 +165,14 @@ export default class LiveKitClient {
   }
 
   addConnectionQualityIndicator(userId: string): void {
-    if (!(getGame().settings as any).get(MODULE_NAME, "displayConnectionQuality")) {
+    if (!getGame().settings.get(MODULE_NAME, "displayConnectionQuality")) {
       // Connection quality indicator is not enabled
       return;
     }
 
     // Get the user camera view and player name bar
     const userCameraView = ui.webrtc && 'getUserCameraView' in ui.webrtc 
-      ? (ui.webrtc as any).getUserCameraView(userId) 
+      ? (ui.webrtc as FoundryUI['webrtc']).getUserCameraView?.(userId) 
       : undefined;
     const userNameBar = userCameraView?.querySelector(".player-name");
 
@@ -212,7 +211,7 @@ export default class LiveKitClient {
   addToggleReceiveButtons(userId: string): void {
     // Get the user camera view, settings, and audio element
     const userCameraView = ui.webrtc && 'getUserCameraView' in ui.webrtc 
-      ? (ui.webrtc as any).getUserCameraView(userId) 
+      ? (ui.webrtc as FoundryUI['webrtc']).getUserCameraView?.(userId) 
       : undefined;
     const userSettings = getGame().webrtc?.settings.getUser(userId);
     const userToggleAudioElement = userCameraView?.querySelector(
@@ -400,7 +399,7 @@ export default class LiveKitClient {
             this.trackPublishOptions
           );
           const userVideoElement = ui.webrtc && 'getUserVideoElement' in ui.webrtc 
-            ? (ui.webrtc as any).getUserVideoElement(getGame().user?.id || "")
+            ? (ui.webrtc as FoundryUI['webrtc']).getUserVideoElement?.(getGame().user?.id || "")
             : undefined;
           if (userVideoElement instanceof HTMLVideoElement) {
             this.attachVideoTrack(this.videoTrack, userVideoElement);
@@ -1341,7 +1340,7 @@ export default class LiveKitClient {
   setConnectionQualityIndicator(userId: string, quality?: string): void {
     // Get the user camera view and connection quality indicator
     const userCameraView = ui.webrtc && 'getUserCameraView' in ui.webrtc 
-      ? (ui.webrtc as any).getUserCameraView(userId) 
+      ? (ui.webrtc as FoundryUI['webrtc']).getUserCameraView?.(userId) 
       : undefined;
     const connectionQualityIndicator = userCameraView?.querySelector(
       ".connection-quality-indicator"
@@ -1478,6 +1477,7 @@ export default class LiveKitClient {
       // Get screen tracks
       this.screenTracks = await createLocalScreenTracks({
         audio: screenAudioOptions,
+        ...screenCaptureOptions,
       });
 
       this.screenTracks.forEach(async (screenTrack: LocalTrack) => {
@@ -1490,7 +1490,7 @@ export default class LiveKitClient {
 
           // Attach the screen share video to our video element
           const userVideoElement = ui.webrtc && 'getUserVideoElement' in ui.webrtc 
-            ? (ui.webrtc as any).getUserVideoElement(getGame().user?.id || "")
+            ? (ui.webrtc as FoundryUI['webrtc']).getUserVideoElement?.(getGame().user?.id || "")
             : undefined;
           if (userVideoElement instanceof HTMLVideoElement) {
             this.attachVideoTrack(screenTrack, userVideoElement);
@@ -1502,11 +1502,6 @@ export default class LiveKitClient {
 
         // Note: audioBitrate property was removed in LiveKit v2
         // Audio quality is now controlled through different mechanisms
-        const audioMusicModeRate =
-          (((getGame().settings as any).get(
-            MODULE_NAME,
-            "audioMusicModeRate"
-          ) as number) || 96) * 1000;
 
         // Publish the track
         await this.liveKitRoom?.localParticipant.publishTrack(

@@ -28,7 +28,7 @@ export default function registerModuleSettings(): void {
   registerModuleSetting<number>({
     name: "audioMusicModeRate",
     scope: "client",
-    config: getGame().settings.get(MODULE_NAME as any, "audioMusicMode" as any) === true,
+    config: getGame().settings.get(MODULE_NAME, "audioMusicMode") === true,
     default: 96,
     type: Number,
     range: {
@@ -82,10 +82,10 @@ export default function registerModuleSettings(): void {
     config: true,
     default: false,
     type: Boolean,
-    onChange: (value: any) => {
+    onChange: (value: boolean) => {
       if (value === true && getGame().user?.isGM) {
         log.warn("Resetting meeting room ID");
-        getGame().settings.set(MODULE_NAME as any, "resetRoom" as any, false);
+        getGame().settings.set(MODULE_NAME, "resetRoom", false);
         getGame().webrtc?.client.settings.set(
           "world",
           "server.room",
@@ -106,13 +106,13 @@ export default function registerModuleSettings(): void {
   });
 
   // Set the initial debug level
-  log.setDebug(getGame().settings.get(MODULE_NAME as any, "debug" as any) === true);
+  log.setDebug(getGame().settings.get(MODULE_NAME, "debug") === true);
 
   // Register livekit trace logging setting
   registerModuleSetting({
     name: "liveKitTrace",
     scope: "world",
-    config: getGame().settings.get(MODULE_NAME as any, "debug" as any) === true,
+    config: getGame().settings.get(MODULE_NAME, "debug") === true,
     default: false,
     type: Boolean,
     onChange: () => delayReload(),

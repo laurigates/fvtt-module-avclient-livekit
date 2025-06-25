@@ -20,8 +20,8 @@ interface ModuleSettingsObject<T = unknown> {
   scope?: "world" | "client";
   config?: boolean;
   default?: T;
-  type?: any;
-  range?: any;
+  type?: Function | typeof String | typeof Number | typeof Boolean;
+  range?: { min: number; max: number; step: number };
   onChange?: (value: T) => void;
 }
 
@@ -87,7 +87,7 @@ export function getGame(): Game {
 // Returns if the current version is using the new v10 AV
 export function isVersion10AV(): boolean {
   return foundry.utils.isNewerVersion(
-    getGame().release?.version || (getGame().data as any)?.version || "0",
+    getGame().release?.version || getGame().data?.version || "0",
     "10.265"
   );
 }
@@ -95,7 +95,7 @@ export function isVersion10AV(): boolean {
 // Returns if the current version is using the new v10 AV
 export function isVersion11AV(): boolean {
   return foundry.utils.isNewerVersion(
-    getGame().release?.version || (getGame().data as any)?.version || "0",
+    getGame().release?.version || getGame().data?.version || "0",
     "11.292"
   );
 }
@@ -133,7 +133,7 @@ export async function loadScript(scriptSrc: string): Promise<boolean> {
 export function registerModuleSetting<T>(
   settingsObject: ModuleSettingsObject<T>
 ): void {
-  (getGame().settings as any).register(MODULE_NAME, settingsObject.name, {
+  getGame().settings.register(MODULE_NAME, settingsObject.name, {
     name: `${LANG_NAME}.${settingsObject.name}`,
     hint: `${LANG_NAME}.${settingsObject.name}Hint`,
     scope: settingsObject.scope,

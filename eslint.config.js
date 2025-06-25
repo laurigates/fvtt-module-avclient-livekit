@@ -6,7 +6,7 @@ import globals from "globals";
 export default [
   // Global ignores
   {
-    ignores: ["node_modules/**", "dist/**", "coverage/**"],
+    ignores: ["node_modules/**", "dist/**", "coverage/**", "webpack.*.js"],
   },
   js.configs.recommended,
   {
@@ -28,6 +28,7 @@ export default [
         debounce: "readonly",
         // FoundryVTT types
         AVClient: "readonly",
+        AVConfig: "readonly",
         AVMaster: "readonly",
         AVSettings: "readonly",
         CameraViews: "readonly",
