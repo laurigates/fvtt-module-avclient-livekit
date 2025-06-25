@@ -20,7 +20,7 @@ interface ModuleSettingsObject<T = unknown> {
   scope?: "world" | "client";
   config?: boolean;
   default?: T;
-  type?: Function | typeof String | typeof Number | typeof Boolean;
+  type?: (() => unknown) | typeof String | typeof Number | typeof Boolean;
   range?: { min: number; max: number; step: number };
   onChange?: (value: T) => void;
 }

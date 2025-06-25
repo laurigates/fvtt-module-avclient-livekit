@@ -154,7 +154,7 @@ interface FoundrySettingConfig {
   key: string;
   name?: string;
   hint?: string;
-  type: Function | typeof String | typeof Number | typeof Boolean;
+  type: (() => unknown) | typeof String | typeof Number | typeof Boolean;
   config: boolean;
   scope: string;
   choices?: Record<string, string>;

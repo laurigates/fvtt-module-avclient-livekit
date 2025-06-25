@@ -37,6 +37,13 @@ export default [
         Dialog: "readonly",
         Canvas: "readonly",
         Game: "readonly",
+        // Custom type definitions from types/avclient-livekit.d.ts
+        ApplicationOptions: "readonly",
+        FoundryGame: "readonly",
+        FoundryUI: "readonly",
+        FoundrySettings: "readonly",
+        FoundrySettingConfig: "readonly",
+        FoundryPosition: "readonly",
         // Browser types that might not be available
         JQuery: "readonly",
         EventListener: "readonly",
