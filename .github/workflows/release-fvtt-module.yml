@@ -59,10 +59,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-          cache: 'yarn'
+          cache: 'npm'
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: npm ci
 
       - name: Run quality checks
         run: |
@@ -75,7 +75,7 @@ jobs:
           mv module.json.tmp module.json
 
       - name: Build production package
-        run: yarn build
+        run: npm run build
 
       - name: Validate built module
         run: npx @typhonjs-fvtt/validate-manifest module.json
