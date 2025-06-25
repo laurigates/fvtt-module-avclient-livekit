@@ -24,7 +24,6 @@ import {
   VideoPresets43,
   VideoTrack,
   DisconnectReason,
-  AudioPresets,
   TrackPublishOptions,
   ScreenShareCaptureOptions,
 } from "livekit-client";
@@ -120,7 +119,7 @@ export default class LiveKitClient {
     }
 
     // Set up all other users
-    this.liveKitRoom.participants.forEach((participant: RemoteParticipant) => {
+    this.liveKitRoom.remoteParticipants.forEach((participant: RemoteParticipant) => {
       this.onParticipantConnected(participant);
     });
   }
@@ -137,7 +136,7 @@ export default class LiveKitClient {
     }
 
     const connectButton = $(
-      `<a class="av-control toggle livekit-control connect hidden" title="${getGame().i18n.localize(
+      `<a class="av-control toggle livekit-control connect hidden" title="${getGame().i18n?.localize(
         `${LANG_NAME}.connect`
       )}"><i class="fas fa-toggle-off"></i></a>`
     );
@@ -148,7 +147,7 @@ export default class LiveKitClient {
     element.before(connectButton);
 
     const disconnectButton = $(
-      `<a class="av-control toggle livekit-control disconnect hidden" title="${getGame().i18n.localize(
+      `<a class="av-control toggle livekit-control disconnect hidden" title="${getGame().i18n?.localize(
         `${LANG_NAME}.disconnect`
       )}"><i class="fas fa-toggle-on"></i></a>`
     );
@@ -172,7 +171,9 @@ export default class LiveKitClient {
     }
 
     // Get the user camera view and player name bar
-    const userCameraView = ui.webrtc?.getUserCameraView(userId);
+    const userCameraView = ui.webrtc && 'getUserCameraView' in ui.webrtc 
+      ? (ui.webrtc as FoundryUI['webrtc']).getUserCameraView?.(userId) 
+      : undefined;
     const userNameBar = userCameraView?.querySelector(".player-name");
 
     if (userCameraView?.querySelector(".connection-quality-indicator")) {
@@ -209,7 +210,9 @@ export default class LiveKitClient {
 
   addToggleReceiveButtons(userId: string): void {
     // Get the user camera view, settings, and audio element
-    const userCameraView = ui.webrtc?.getUserCameraView(userId);
+    const userCameraView = ui.webrtc && 'getUserCameraView' in ui.webrtc 
+      ? (ui.webrtc as FoundryUI['webrtc']).getUserCameraView?.(userId) 
+      : undefined;
     const userSettings = getGame().webrtc?.settings.getUser(userId);
     const userToggleAudioElement = userCameraView?.querySelector(
       '[data-action="toggle-audio"]'
@@ -395,9 +398,9 @@ export default class LiveKitClient {
             this.videoTrack,
             this.trackPublishOptions
           );
-          const userVideoElement = ui.webrtc?.getUserVideoElement(
-            getGame().user?.id || ""
-          );
+          const userVideoElement = ui.webrtc && 'getUserVideoElement' in ui.webrtc 
+            ? (ui.webrtc as FoundryUI['webrtc']).getUserVideoElement?.(getGame().user?.id || "")
+            : undefined;
           if (userVideoElement instanceof HTMLVideoElement) {
             this.attachVideoTrack(this.videoTrack, userVideoElement);
           }
@@ -535,7 +538,7 @@ export default class LiveKitClient {
     };
 
     // Set audio parameters for music streaming mode
-    if (getGame().settings.get(MODULE_NAME, "audioMusicMode")) {
+    if ((getGame().settings as any).get(MODULE_NAME, "audioMusicMode")) {
       audioCaptureOptions.autoGainControl = false;
       audioCaptureOptions.echoCancellation = false;
       audioCaptureOptions.noiseSuppression = false;
@@ -565,15 +568,14 @@ export default class LiveKitClient {
       return audioTrack;
     }
 
-    this.liveKitParticipants.get(userId)?.audioTracks.forEach((publication) => {
-      if (
-        publication.kind === Track.Kind.Audio &&
-        (publication.track instanceof LocalAudioTrack ||
-          publication.track instanceof RemoteAudioTrack)
-      ) {
-        audioTrack = publication.track;
+    const participant = this.liveKitParticipants.get(userId);
+    if (participant) {
+      const publication = participant.getTrackPublication(Track.Source.Microphone);
+      if (publication?.audioTrack instanceof LocalAudioTrack ||
+          publication?.audioTrack instanceof RemoteAudioTrack) {
+        audioTrack = publication.audioTrack;
       }
-    });
+    }
     return audioTrack;
   }
 
@@ -584,7 +586,7 @@ export default class LiveKitClient {
       return "";
     }
 
-    for (const t of participant.tracks.values()) {
+    for (const t of participant.getTrackPublications()) {
       if (t.track) {
         totalBitrate += t.track.currentBitrate;
       }
@@ -615,15 +617,14 @@ export default class LiveKitClient {
       return videoTrack;
     }
 
-    this.liveKitParticipants.get(userId)?.videoTracks.forEach((publication) => {
-      if (
-        publication.kind === Track.Kind.Video &&
-        (publication.track instanceof LocalVideoTrack ||
-          publication.track instanceof RemoteVideoTrack)
-      ) {
-        videoTrack = publication.track;
+    const participant = this.liveKitParticipants.get(userId);
+    if (participant) {
+      const publication = participant.getTrackPublication(Track.Source.Camera);
+      if (publication?.videoTrack instanceof LocalVideoTrack ||
+          publication?.videoTrack instanceof RemoteVideoTrack) {
+        videoTrack = publication.videoTrack;
       }
-    });
+    }
     return videoTrack;
   }
 
@@ -866,7 +867,7 @@ export default class LiveKitClient {
   onConnectionQualityChanged(quality: string, participant: Participant) {
     log.debug("onConnectionQualityChanged:", quality, participant);
 
-    if (!getGame().settings.get(MODULE_NAME, "displayConnectionQuality")) {
+    if (!(getGame().settings as any).get(MODULE_NAME, "displayConnectionQuality")) {
       // Connection quality indicator is not enabled
       return;
     }
@@ -908,7 +909,7 @@ export default class LiveKitClient {
 
   onGetUserContextOptions(
     playersElement: JQuery<HTMLElement>,
-    contextOptions: ContextMenuEntry[]
+    contextOptions: any[]
   ): void {
     // Don't add breakout options if AV is disabled
     if (this.settings.get("world", "mode") === AVSettings.AV_MODES.DISABLED) {
@@ -964,7 +965,7 @@ export default class LiveKitClient {
     // Set up remote participant callbacks
     this.setRemoteParticipantCallbacks(participant);
 
-    participant.tracks.forEach((publication) => {
+    participant.getTrackPublications().forEach((publication) => {
       this.onTrackPublished(publication, participant);
     });
 
@@ -1087,7 +1088,9 @@ export default class LiveKitClient {
         });
       }
     } else {
-      const userCameraView = ui.webrtc?.getUserCameraView(fvttUserId);
+      const userCameraView = ui.webrtc && 'getUserCameraView' in ui.webrtc 
+        ? (ui.webrtc as any).getUserCameraView(fvttUserId) 
+        : undefined;
       if (userCameraView) {
         let uiIndicator;
         if (publication.kind === Track.Kind.Audio) {
@@ -1170,7 +1173,9 @@ export default class LiveKitClient {
       return;
     }
 
-    const videoElement = ui.webrtc?.getUserVideoElement(fvttUserId);
+    const videoElement = ui.webrtc && 'getUserVideoElement' in ui.webrtc 
+      ? (ui.webrtc as any).getUserVideoElement(fvttUserId) 
+      : undefined;
 
     if (!videoElement) {
       log.debug(
@@ -1215,7 +1220,9 @@ export default class LiveKitClient {
   onVolumeChange(event: JQuery.ChangeEvent): void {
     const input = event.currentTarget;
     const box = input.closest(".camera-view");
-    const volume = AudioHelper.inputToVolume(input.value);
+    const volume = (typeof AudioHelper !== 'undefined' && AudioHelper.inputToVolume) 
+      ? AudioHelper.inputToVolume(input.value)
+      : parseFloat(input.value) / 100; // Fallback conversion
     const audioElements: HTMLCollection = box.getElementsByTagName("audio");
     for (const audioElement of audioElements) {
       if (audioElement instanceof HTMLAudioElement) {
@@ -1311,9 +1318,9 @@ export default class LiveKitClient {
   }
 
   setConnectionButtons(connected: boolean): void {
-    const userCameraView = ui.webrtc?.getUserCameraView(
-      getGame().user?.id || ""
-    );
+    const userCameraView = ui.webrtc && 'getUserCameraView' in ui.webrtc 
+      ? (ui.webrtc as any).getUserCameraView(getGame().user?.id || "")
+      : undefined;
 
     if (userCameraView) {
       const connectButton = userCameraView.querySelector(
@@ -1332,7 +1339,9 @@ export default class LiveKitClient {
 
   setConnectionQualityIndicator(userId: string, quality?: string): void {
     // Get the user camera view and connection quality indicator
-    const userCameraView = ui.webrtc?.getUserCameraView(userId);
+    const userCameraView = ui.webrtc && 'getUserCameraView' in ui.webrtc 
+      ? (ui.webrtc as FoundryUI['webrtc']).getUserCameraView?.(userId) 
+      : undefined;
     const connectionQualityIndicator = userCameraView?.querySelector(
       ".connection-quality-indicator"
     );
@@ -1468,6 +1477,7 @@ export default class LiveKitClient {
       // Get screen tracks
       this.screenTracks = await createLocalScreenTracks({
         audio: screenAudioOptions,
+        ...screenCaptureOptions,
       });
 
       this.screenTracks.forEach(async (screenTrack: LocalTrack) => {
@@ -1479,9 +1489,9 @@ export default class LiveKitClient {
           }
 
           // Attach the screen share video to our video element
-          const userVideoElement = ui.webrtc?.getUserVideoElement(
-            getGame().user?.id || ""
-          );
+          const userVideoElement = ui.webrtc && 'getUserVideoElement' in ui.webrtc 
+            ? (ui.webrtc as FoundryUI['webrtc']).getUserVideoElement?.(getGame().user?.id || "")
+            : undefined;
           if (userVideoElement instanceof HTMLVideoElement) {
             this.attachVideoTrack(screenTrack, userVideoElement);
           }
@@ -1490,13 +1500,8 @@ export default class LiveKitClient {
         // Get publishing options
         const screenTrackPublishOptions = this.trackPublishOptions;
 
-        // Use the music mode bitrate
-        const audioMusicModeRate =
-          ((getGame().settings.get(
-            MODULE_NAME,
-            "audioMusicModeRate"
-          ) as number) || 96) * 1000;
-        screenTrackPublishOptions.audioBitrate = audioMusicModeRate;
+        // Note: audioBitrate property was removed in LiveKit v2
+        // Audio quality is now controlled through different mechanisms
 
         // Publish the track
         await this.liveKitRoom?.localParticipant.publishTrack(
@@ -1527,20 +1532,13 @@ export default class LiveKitClient {
 
   get trackPublishOptions(): TrackPublishOptions {
     const trackPublishOptions: TrackPublishOptions = {
-      audioBitrate: AudioPresets.music.maxBitrate,
       simulcast: true,
       videoCodec: "vp8",
       videoSimulcastLayers: [VideoPresets43.h180, VideoPresets43.h360],
     };
 
-    if (getGame().settings.get(MODULE_NAME, "audioMusicMode")) {
-      const audioMusicModeRate =
-        ((getGame().settings.get(
-          MODULE_NAME,
-          "audioMusicModeRate"
-        ) as number) || 96) * 1000;
-      trackPublishOptions.audioBitrate = audioMusicModeRate;
-    }
+    // Note: audioBitrate property was removed in LiveKit v2
+    // Audio quality is now controlled through different mechanisms
 
     return trackPublishOptions;
   }

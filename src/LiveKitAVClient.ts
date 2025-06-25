@@ -5,6 +5,7 @@ import {
   ConnectionState,
   setLogLevel,
   Room,
+  Track,
 } from "livekit-client";
 
 import { LANG_NAME, MODULE_NAME } from "./utils/constants";
@@ -31,7 +32,7 @@ export default class LiveKitAVClient extends AVClient {
 
     this._liveKitClient = new LiveKitClient(this);
     this.room = null;
-    this.master.config = new LiveKitAVConfig(master);
+    this.master.config = new LiveKitAVConfig() as any;
   }
 
   /* -------------------------------------------- */
@@ -90,7 +91,7 @@ export default class LiveKitAVClient extends AVClient {
     }
 
     // Don't fully initialize if client has enabled the option to use the external web client
-    if (getGame().settings.get(MODULE_NAME, "useExternalAV")) {
+    if (getGame().settings.get(MODULE_NAME as any, "useExternalAV" as any)) {
       log.debug("useExternalAV set, not initializing LiveKitClient");
       this._liveKitClient.useExternalAV = true;
 
@@ -100,7 +101,7 @@ export default class LiveKitAVClient extends AVClient {
       });
 
       this._liveKitClient.initState = InitState.Initialized;
-      Hooks.callAll("liveKitClientInitialized", this._liveKitClient);
+      Hooks.callAll("liveKitClientInitialized" as any, this._liveKitClient);
       return;
     }
 
@@ -114,7 +115,7 @@ export default class LiveKitAVClient extends AVClient {
     this.settings.initialize();
 
     this._liveKitClient.initState = InitState.Initialized;
-    Hooks.callAll("liveKitClientInitialized", this._liveKitClient);
+    Hooks.callAll("liveKitClientInitialized" as any, this._liveKitClient);
   }
 
   /* -------------------------------------------- */
@@ -196,7 +197,7 @@ export default class LiveKitAVClient extends AVClient {
       this.master.config.render(true);
       log.error("LiveKit connection information missing");
       ui.notifications?.error(
-        `${getGame().i18n.localize(`${LANG_NAME}.connectionInfoMissing`)}`,
+        `${getGame().i18n?.localize(`${LANG_NAME}.connectionInfoMissing`)}`,
         { permanent: true }
       );
       this._liveKitClient.connectionState = ConnectionState.Disconnected;
@@ -212,7 +213,7 @@ export default class LiveKitAVClient extends AVClient {
       this.master.config.render(true);
       log.error("LiveKit Tavern connection information missing");
       ui.notifications?.error(
-        `${getGame().i18n.localize(`${LANG_NAME}.tavernAccountMissing`)}`,
+        `${getGame().i18n?.localize(`${LANG_NAME}.tavernAccountMissing`)}`,
         { permanent: true }
       );
       this._liveKitClient.connectionState = ConnectionState.Disconnected;
@@ -283,7 +284,7 @@ export default class LiveKitAVClient extends AVClient {
         liveKitServerType.label || liveKitServerType.key
       );
       ui.notifications?.error(
-        `${getGame().i18n.localize(`${LANG_NAME}.tokenError`)}`,
+        `${getGame().i18n?.localize(`${LANG_NAME}.tokenError`)}`,
         { permanent: true }
       );
       this._liveKitClient.connectionState = ConnectionState.Disconnected;
@@ -295,12 +296,12 @@ export default class LiveKitAVClient extends AVClient {
       : liveKitServerType.url;
 
     if (typeof liveKitAddress !== "string") {
-      const message = `${getGame().i18n.localize(
+      const message = `${getGame().i18n?.localize(
         liveKitServerType.label
       )} doesn't provide a URL`;
       log.error(message, liveKitServerType);
       ui.notifications?.error(
-        `${getGame().i18n.localize(`${LANG_NAME}.connectError`)}: ${message}`,
+        `${getGame().i18n?.localize(`${LANG_NAME}.connectError`)}: ${message}`,
         { permanent: true }
       );
       this._liveKitClient.connectionState = ConnectionState.Disconnected;
@@ -320,14 +321,14 @@ export default class LiveKitAVClient extends AVClient {
     };
 
     // Get disable audio/video settings
-    const disableReceivingAudio = getGame().settings.get(
+    const disableReceivingAudio = (getGame().settings as any).get(
       MODULE_NAME,
       "disableReceivingAudio"
-    );
-    const disableReceivingVideo = getGame().settings.get(
+    ) as boolean;
+    const disableReceivingVideo = (getGame().settings as any).get(
       MODULE_NAME,
       "disableReceivingVideo"
-    );
+    ) as boolean;
 
     // Don't auto subscribe to tracks if either video or audio is disabled
     if (disableReceivingAudio || disableReceivingVideo) {
@@ -336,14 +337,14 @@ export default class LiveKitAVClient extends AVClient {
       // Send UI notifications
       if (disableReceivingAudio) {
         ui.notifications?.info(
-          `${getGame().i18n.localize(
+          `${getGame().i18n?.localize(
             `${LANG_NAME}.disableReceivingAudioWarning`
           )}`
         );
       }
       if (disableReceivingVideo) {
         ui.notifications?.info(
-          `${getGame().i18n.localize(
+          `${getGame().i18n?.localize(
             `${LANG_NAME}.disableReceivingVideoWarning`
           )}`
         );
@@ -351,8 +352,8 @@ export default class LiveKitAVClient extends AVClient {
     }
 
     if (
-      getGame().settings.get(MODULE_NAME, "debug") &&
-      getGame().settings.get(MODULE_NAME, "liveKitTrace")
+      getGame().settings.get(MODULE_NAME as any, "debug" as any) &&
+      getGame().settings.get(MODULE_NAME as any, "liveKitTrace" as any)
     ) {
       log.debug("Setting livekit trace logging");
       setLogLevel(LogLevel.trace);
@@ -379,14 +380,14 @@ export default class LiveKitAVClient extends AVClient {
         String(message).includes("validation failed, token is expired") ||
         String(message).includes("validation failed, token not valid yet")
       ) {
-        message = `${getGame().i18n.localize(
+        message = `${getGame().i18n?.localize(
           `${LANG_NAME}.connectErrorCheckClock`
         )}`;
       }
 
       // TODO: Add some incremental back-off reconnect logic here
       ui.notifications?.error(
-        `${getGame().i18n.localize(`${LANG_NAME}.connectError`)}: ${message}`,
+        `${getGame().i18n?.localize(`${LANG_NAME}.connectError`)}: ${message}`,
         { permanent: true }
       );
       this._liveKitClient.setConnectionButtons(false);
@@ -487,7 +488,7 @@ export default class LiveKitAVClient extends AVClient {
       const devices = await Room.getLocalDevices(kind);
       return devices.reduce((obj: Record<string, string>, device) => {
         obj[device.deviceId] =
-          device.label || getGame().i18n.localize("WEBRTC.UnknownDevice");
+          device.label || getGame().i18n?.localize("WEBRTC.UnknownDevice") || "Unknown Device";
         return obj;
       }, {});
     } catch (error: unknown) {
@@ -509,7 +510,7 @@ export default class LiveKitAVClient extends AVClient {
     log.debug("getConnectedUsers");
 
     // If useExternalAV is enabled, return empty array
-    if (getGame().settings.get(MODULE_NAME, "useExternalAV")) {
+    if (getGame().settings.get(MODULE_NAME as any, "useExternalAV" as any)) {
       return [];
     }
 
@@ -653,11 +654,11 @@ export default class LiveKitAVClient extends AVClient {
       this._liveKitClient.videoTrack.mute();
     } else {
       // Ensure the video track is published to avoid an error when un-muting an unpublished track
+      const videoPublication = this._liveKitClient.liveKitRoom?.localParticipant.getTrackPublication(Track.Source.Camera);
       if (
         !this._liveKitClient.videoTrack.sid ||
-        !this._liveKitClient.liveKitRoom?.localParticipant.videoTracks.has(
-          this._liveKitClient.videoTrack.sid
-        )
+        !videoPublication ||
+        videoPublication.track !== this._liveKitClient.videoTrack
       ) {
         log.debug("toggleVideo unmute called but video track is not published");
         return;
@@ -746,7 +747,7 @@ export default class LiveKitAVClient extends AVClient {
    * Handle changes to A/V configuration settings.
    * @param {object} changed      The settings which have changed
    */
-  onSettingsChanged(changed: DeepPartial<AVSettings.Settings>): void {
+  onSettingsChanged(changed: any): void {
     log.debug("onSettingsChanged:", changed);
     const keys = new Set(Object.keys(foundry.utils.flattenObject(changed)));
 

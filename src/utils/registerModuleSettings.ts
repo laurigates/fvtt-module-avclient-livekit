@@ -21,7 +21,7 @@ export default function registerModuleSettings(): void {
     onChange: () => {
       // Re-register settings to update visibility of audioMusicModeRate
       registerModuleSettings();
-      getGame().webrtc?.client._liveKitClient.changeAudioSource(true);
+      getGame().webrtc?.client._liveKitClient?.changeAudioSource(true);
     },
   });
 
@@ -37,7 +37,7 @@ export default function registerModuleSettings(): void {
       step: 8,
     },
     onChange: () =>
-      getGame().webrtc?.client._liveKitClient.changeAudioSource(true),
+      getGame().webrtc?.client._liveKitClient?.changeAudioSource(true),
   });
 
   registerModuleSetting({
@@ -82,7 +82,7 @@ export default function registerModuleSettings(): void {
     config: true,
     default: false,
     type: Boolean,
-    onChange: (value) => {
+    onChange: (value: boolean) => {
       if (value === true && getGame().user?.isGM) {
         log.warn("Resetting meeting room ID");
         getGame().settings.set(MODULE_NAME, "resetRoom", false);

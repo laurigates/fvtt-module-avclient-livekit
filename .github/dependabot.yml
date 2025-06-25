@@ -1,0 +1,86 @@
+version: 2
+updates:
+  # Enable version updates for npm dependencies
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+    open-pull-requests-limit: 10
+    assignees:
+      - "bekriebel"
+    reviewers:
+      - "bekriebel"
+    commit-message:
+      prefix: "chore"
+      prefix-development: "chore"
+      include: "scope"
+    groups:
+      # Group all TypeScript and ESLint related updates
+      typescript-ecosystem:
+        patterns:
+          - "typescript"
+          - "@typescript-eslint/*"
+          - "eslint*"
+          - "@types/*"
+        update-types:
+          - "minor"
+          - "patch"
+      # Group LiveKit related updates
+      livekit-updates:
+        patterns:
+          - "livekit-*"
+          - "jose"
+        update-types:
+          - "minor"
+          - "patch"
+      # Group webpack and build tools
+      build-tools:
+        patterns:
+          - "webpack*"
+          - "*-webpack-plugin"
+          - "ts-loader"
+          - "terser-webpack-plugin"
+          - "copy-webpack-plugin"
+          - "source-map-loader"
+        update-types:
+          - "minor"
+          - "patch"
+      # Group browser polyfills
+      polyfills:
+        patterns:
+          - "buffer"
+          - "crypto-browserify"
+          - "stream-browserify"
+          - "process"
+          - "util"
+        update-types:
+          - "minor"
+          - "patch"
+    ignore:
+      # Ignore major version updates for critical dependencies
+      - dependency-name: "livekit-client"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "webpack"
+        update-types: ["version-update:semver-major"]
+      # Ignore FoundryVTT types as they are pinned to specific versions
+      - dependency-name: "@league-of-foundry-developers/foundry-vtt-types"
+
+  # Enable version updates for GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+    open-pull-requests-limit: 5
+    assignees:
+      - "bekriebel"
+    reviewers:
+      - "bekriebel"
+    commit-message:
+      prefix: "ci"
+      include: "scope"

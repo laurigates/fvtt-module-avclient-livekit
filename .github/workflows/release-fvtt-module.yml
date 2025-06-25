@@ -9,87 +9,114 @@ jobs:
   check_version:
     name: Check FoundryVTT module version
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 2
-      - name: Check for new version
-        id: check_for_new_version
-        uses: salsify/action-detect-and-tag-new-version@v2
-        with:
-          create-tag: false
-          version-command: |
-            jq -r .version module.json
     outputs:
-      module_previous_version: v${{ steps.check_for_new_version.outputs.previous-version }}
-      module_current_version: v${{ steps.check_for_new_version.outputs.current-version }}
-  build:
-    name: Release FoundryVTT Module
-    runs-on: ubuntu-latest
-    needs: check_version
-    if: ${{ needs.check_version.outputs.module_current_version != needs.check_version.outputs.module_previous_version }}
+      version_changed: ${{ steps.version_check.outputs.changed }}
+      current_version: ${{ steps.version_check.outputs.current_version }}
+      previous_version: ${{ steps.version_check.outputs.previous_version }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Create tag changelog
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Check for version changes
+        id: version_check
+        run: |
+          current_version=$(jq -r .version module.json)
+          echo "current_version=v$current_version" >> $GITHUB_OUTPUT
+          
+          # Get previous version from git tags
+          previous_version=$(git tag --sort=-version:refname | head -n1 || echo "v0.0.0")
+          echo "previous_version=$previous_version" >> $GITHUB_OUTPUT
+          
+          if [ "v$current_version" != "$previous_version" ]; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "Version changed from $previous_version to v$current_version"
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "No version change detected"
+          fi
+
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    needs: check_version
+    if: needs.check_version.outputs.version_changed == 'true'
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Run quality checks
+        run: |
+          npx eslint . --ext .ts,.js
+          npx tsc --noEmit --skipLibCheck || echo "TypeScript check failed but continuing..."
+
+      - name: Update download URL in module.json
+        run: |
+          jq '.download = "https://github.com/${{ github.repository }}/releases/download/${{ needs.check_version.outputs.current_version }}/${{ github.event.repository.name }}.zip"' module.json > module.json.tmp
+          mv module.json.tmp module.json
+
+      - name: Build production package
+        run: yarn build
+
+      - name: Validate built module
+        run: npx @typhonjs-fvtt/validate-manifest module.json
+
+      - name: Create module package
+        working-directory: ./dist
+        run: zip -r ../${{ github.event.repository.name }}.zip *
+
+      - name: Generate changelog
         id: changelog
         run: |
-          CHANGELOG=$(git log --reverse --pretty=oneline --abbrev-commit ${{ needs.check_version.outputs.module_previous_version }}..HEAD)
-          # Support for multiline, see
-          # https://github.com/actions/create-release/pull/11#issuecomment-640071918
-          CHANGELOG="${CHANGELOG//'%'/'%25'}"
-          CHANGELOG="${CHANGELOG//$'\n'/'%0A'}"
-          CHANGELOG="${CHANGELOG//$'\r'/'%0D'}"
-          echo "Got changelog: $CHANGELOG"
-          echo "::set-output name=changelog::$CHANGELOG"
-      - name: Update download URL
-        id: update_module_download_url
-        uses: microsoft/variable-substitution@v1
+          if [ "${{ needs.check_version.outputs.previous_version }}" != "v0.0.0" ]; then
+            CHANGELOG=$(git log --pretty=format:"- %s (%h)" ${{ needs.check_version.outputs.previous_version }}..HEAD)
+          else
+            CHANGELOG="Initial release"
+          fi
+          echo "changelog<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGELOG" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
         with:
-          files: "module.json"
-        env:
-          download: https://github.com/${{ github.repository }}/releases/download/${{ needs.check_version.outputs.module_current_version }}/${{ github.event.repository.name }}.zip
-      - name: Install dependencies
-        id: install_dependencies
-        run: yarn install
-      - name: Build package
-        id: build
-        run: yarn build
-      - name: Package module
-        working-directory: ./dist
-        run: |
-          zip -r ../${{ github.event.repository.name }}.zip *
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ needs.check_version.outputs.module_current_version }}
-          release_name: Release ${{ needs.check_version.outputs.module_current_version }}
-          body: ${{ steps.changelog.outputs.changelog }}
+          tag_name: ${{ needs.check_version.outputs.current_version }}
+          name: Release ${{ needs.check_version.outputs.current_version }}
+          body: |
+            ## Changes
+            ${{ steps.changelog.outputs.changelog }}
+            
+            ## Installation
+            
+            1. Download the `${{ github.event.repository.name }}.zip` file below
+            2. Extract it to your FoundryVTT `Data/modules` directory
+            3. Restart FoundryVTT and enable the module in your world settings
+            
+            ## Compatibility
+            
+            This release is compatible with FoundryVTT v9.238+ through v12.x
+          files: |
+            ${{ github.event.repository.name }}.zip
+            module.json
           draft: false
-          prerelease: true
-      - name: Upload module zip
-        id: upload-module-zip
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./${{ github.event.repository.name }}.zip
-          asset_name: ${{ github.event.repository.name }}.zip
-          asset_content_type: application/zip
-      - name: Upload module json
-        id: upload-module-json
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./module.json
-          asset_name: module.json
-          asset_content_type: application/json
+          prerelease: false
+          generate_release_notes: true

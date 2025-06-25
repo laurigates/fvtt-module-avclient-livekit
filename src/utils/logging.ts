@@ -57,5 +57,5 @@ export function setDebug(value: boolean): void {
     };
   }
 
-  Hooks.callAll(`${MODULE_NAME}DebugSet`, value);
+  Hooks.callAll(`${MODULE_NAME}DebugSet` as any, value);
 }

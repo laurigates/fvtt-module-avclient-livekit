@@ -5,13 +5,13 @@ import { getGame } from "./utils/helpers";
 import * as log from "./utils/logging";
 
 export function addContextOptions(
-  contextOptions: ContextMenuEntry[],
+  contextOptions: any[],
   liveKitClient: LiveKitClient
 ): void {
   // Add breakout options to the playerlist context menus
   contextOptions.push(
     {
-      name: getGame().i18n.localize(`${LANG_NAME}.startAVBreakout`),
+      name: getGame().i18n?.localize(`${LANG_NAME}.startAVBreakout`) || "",
       icon: '<i class="fa fa-comment"></i>',
       condition: (players) => {
         const userId: string = players[0].dataset.userId || "";
@@ -33,7 +33,7 @@ export function addContextOptions(
       },
     },
     {
-      name: getGame().i18n.localize(`${LANG_NAME}.joinAVBreakout`),
+      name: getGame().i18n?.localize(`${LANG_NAME}.joinAVBreakout`) || "",
       icon: '<i class="fas fa-comment-dots"></i>',
       condition: (players) => {
         const userId: string = players[0].dataset.userId || "";
@@ -60,7 +60,7 @@ export function addContextOptions(
       },
     },
     {
-      name: getGame().i18n.localize(`${LANG_NAME}.pullToAVBreakout`),
+      name: getGame().i18n?.localize(`${LANG_NAME}.pullToAVBreakout`) || "",
       icon: '<i class="fas fa-comments"></i>',
       condition: (players) => {
         const userId: string = players[0].dataset.userId || "";
@@ -85,7 +85,7 @@ export function addContextOptions(
       },
     },
     {
-      name: getGame().i18n.localize(`${LANG_NAME}.leaveAVBreakout`),
+      name: getGame().i18n?.localize(`${LANG_NAME}.leaveAVBreakout`) || "",
       icon: '<i class="fas fa-comment-slash"></i>',
       condition: (players) => {
         const userId: string = players[0].dataset.userId || "";
@@ -96,7 +96,7 @@ export function addContextOptions(
       },
     },
     {
-      name: getGame().i18n.localize(`${LANG_NAME}.removeFromAVBreakout`),
+      name: getGame().i18n?.localize(`${LANG_NAME}.removeFromAVBreakout`) || "",
       icon: '<i class="fas fa-comment-slash"></i>',
       condition: (players) => {
         const userId: string = players[0].dataset.userId || "";
@@ -117,7 +117,7 @@ export function addContextOptions(
       },
     },
     {
-      name: getGame().i18n.localize(`${LANG_NAME}.endAllAVBreakouts`),
+      name: getGame().i18n?.localize(`${LANG_NAME}.endAllAVBreakouts`) || "",
       icon: '<i class="fas fa-ban"></i>',
       condition: (players) => {
         const userId: string = players[0].dataset.userId || "";
@@ -141,11 +141,11 @@ export function breakout(
 
   if (!breakoutRoom) {
     ui.notifications?.info(
-      `${getGame().i18n.localize(`${LANG_NAME}.leavingAVBreakout`)}`
+      `${getGame().i18n?.localize(`${LANG_NAME}.leavingAVBreakout`)}`
     );
   } else {
     ui.notifications?.info(
-      `${getGame().i18n.localize(`${LANG_NAME}.joiningAVBreakout`)}`
+      `${getGame().i18n?.localize(`${LANG_NAME}.joiningAVBreakout`)}`
     );
   }
 

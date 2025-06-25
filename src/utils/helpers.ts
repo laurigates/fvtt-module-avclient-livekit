@@ -14,10 +14,15 @@ interface DeviceInfo {
 }
 
 // Module Settings object
-interface ModuleSettingsObject<T = unknown>
-  extends Omit<SettingConfig<T>, "key" | "namespace"> {
+interface ModuleSettingsObject<T = unknown> {
   /** The name that will be used to generate the key, name, and hint*/
   name: string;
+  scope?: "world" | "client";
+  config?: boolean;
+  default?: T;
+  type?: (() => unknown) | typeof String | typeof Number | typeof Boolean;
+  range?: { min: number; max: number; step: number };
+  onChange?: (value: T) => void;
 }
 
 /**
@@ -58,7 +63,7 @@ export function deviceInfoToObject(
   for (let i = 0; i < list.length; i += 1) {
     if (list[i].kind === kind) {
       obj[list[i].deviceId] =
-        list[i].label || getGame().i18n.localize("WEBRTC.UnknownDevice");
+        list[i].label || getGame().i18n?.localize("WEBRTC.UnknownDevice") || "Unknown Device";
     }
   }
 
@@ -81,16 +86,16 @@ export function getGame(): Game {
 
 // Returns if the current version is using the new v10 AV
 export function isVersion10AV(): boolean {
-  return isNewerVersion(
-    getGame().release.version || getGame().data.version || 0,
+  return foundry.utils.isNewerVersion(
+    getGame().release?.version || getGame().data?.version || "0",
     "10.265"
   );
 }
 
 // Returns if the current version is using the new v10 AV
 export function isVersion11AV(): boolean {
-  return isNewerVersion(
-    getGame().release.version || getGame().data.version || 0,
+  return foundry.utils.isNewerVersion(
+    getGame().release?.version || getGame().data?.version || "0",
     "11.292"
   );
 }
