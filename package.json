@@ -12,7 +12,7 @@
     "lint": "eslint . --ext .ts,.js",
     "lint:fix": "eslint . --ext .ts,.js --fix",
     "typecheck": "tsc --noEmit --skipLibCheck",
-    "validate": "@typhonjs-fvtt/validate-manifest module.json",
+    "validate": "node scripts/validate-manifest.mjs module.json",
     "clean": "rm -rf dist",
     "ci": "npm run lint && npm run build",
     "prepare": "npm run build"
