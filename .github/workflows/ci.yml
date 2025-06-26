@@ -50,10 +50,10 @@ jobs:
         run: npm ci
 
       - name: Build development
-        run: yarn build:dev
+        run: npm run build:dev
 
       - name: Build production
-        run: yarn build
+        run: npm run build
 
       - name: Upload build artifacts
         if: matrix.node-version == '18'

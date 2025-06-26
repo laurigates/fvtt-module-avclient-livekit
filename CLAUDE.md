@@ -16,16 +16,16 @@ This is **fvtt-module-avclient-livekit**, a FoundryVTT module that replaces the 
 ### Essential Build Commands
 ```bash
 # Development build with file watching
-yarn watch
+npm run watch
 
 # Production build
-yarn build
+npm run build
 
 # Development build (one-time)
-yarn build:dev
+npm run build:dev
 
 # Install dependencies
-yarn install
+npm install
 ```
 
 ### Testing & Quality

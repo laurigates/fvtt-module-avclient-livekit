@@ -1,12 +1,3 @@
 dist/
 node_modules/
 *.log
-
-# Yarn 3 ignores
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/sdks
-!.yarn/versions
