@@ -40,6 +40,7 @@ export default class LiveKitAVConfig extends AVConfig {
       s.isSelect = setting.choices !== undefined;
       s.isRange = setting.type === Number && setting.range;
       s.isNumber = setting.type === Number;
+      // @ts-expect-error - FoundryVTT API property not in type definitions
       s.filePickerType = setting.filePicker === true ? "any" : setting.filePicker;
 
       liveKitSettings.push(s);

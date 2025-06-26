@@ -322,12 +322,10 @@ export default class LiveKitAVClient extends AVClient {
     };
 
     // Get disable audio/video settings
-    // @ts-expect-error - FoundryVTT API
     const disableReceivingAudio = getGame().settings.get(
       MODULE_NAME,
       "disableReceivingAudio"
     ) as boolean;
-    // @ts-expect-error - FoundryVTT API
     const disableReceivingVideo = getGame().settings.get(
       MODULE_NAME,
       "disableReceivingVideo"
@@ -354,7 +352,6 @@ export default class LiveKitAVClient extends AVClient {
       }
     }
 
-    // @ts-expect-error - FoundryVTT API
     if (
       getGame().settings.get(MODULE_NAME, "debug") &&
       getGame().settings.get(MODULE_NAME, "liveKitTrace")
@@ -803,7 +800,6 @@ export default class LiveKitAVClient extends AVClient {
     // Refresh the main settings page if it is open, in case one of our settings has changed
     // @ts-expect-error - FoundryVTT API
     if (getGame().settings.sheet.rendered) {
-      // @ts-expect-error - FoundryVTT API
       getGame().settings.sheet.render();
     }
   }
