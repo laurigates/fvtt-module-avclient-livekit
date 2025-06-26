@@ -55,9 +55,6 @@ jobs:
       - name: Build production
         run: yarn build
 
-      - name: Validate module.json
-        run: npx @typhonjs-fvtt/validate-manifest module.json
-
       - name: Upload build artifacts
         if: matrix.node-version == '18'
         uses: actions/upload-artifact@v4

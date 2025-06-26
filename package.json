@@ -29,7 +29,6 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@typescript-eslint/eslint-plugin": "^8.35.0",
     "@typescript-eslint/parser": "^8.35.0",
-    "@typhonjs-fvtt/validate-manifest": "^8.0.0",
     "buffer": "^6.0.3",
     "copy-webpack-plugin": "^13.0.0",
     "crypto-browserify": "^3.12.1",
