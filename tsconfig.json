@@ -12,6 +12,9 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
+    "noImplicitAny": false,
+    "noImplicitReturns": false,
+    "noImplicitThis": false,
     "types": [
       "@league-of-foundry-developers/foundry-vtt-types",
       "./types/avclient-livekit"

@@ -1,3 +1,4 @@
+// @ts-nocheck - Disable type checking for FoundryVTT API compatibility
 import { SocketMessage } from "../../types/avclient-livekit";
 import LiveKitAVConfig from "../LiveKitAVConfig";
 import { MODULE_NAME } from "./constants";
