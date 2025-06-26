@@ -1,4 +1,3 @@
-// @ts-nocheck - Disable type checking for FoundryVTT API compatibility
 import {
   AudioCaptureOptions,
   ConnectionQuality,

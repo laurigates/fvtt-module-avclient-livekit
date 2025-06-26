@@ -1,4 +1,3 @@
-// @ts-nocheck - Disable type checking for FoundryVTT API compatibility
 import LiveKitClient from "./LiveKitClient";
 import { LANG_NAME, MODULE_NAME, TAVERN_AUTH_SERVER } from "./utils/constants";
 import { delayReload, getGame, isVersion10AV } from "./utils/helpers";
@@ -7,7 +6,7 @@ import * as log from "./utils/logging";
 export default class LiveKitAVConfig extends AVConfig {
   /** @override */
   static get defaultOptions() {
-    // @ts-ignore - FoundryVTT API
+    // @ts-expect-error - FoundryVTT API
     return foundry.utils.mergeObject(super.defaultOptions || {}, {
       template: "modules/avclient-livekit/templates/av-config.html",
     });
@@ -28,12 +27,12 @@ export default class LiveKitAVConfig extends AVConfig {
         continue;
 
       // Update setting data
-      // @ts-ignore - FoundryVTT API
+      // @ts-expect-error - FoundryVTT API
       const s: any = foundry.utils.deepClone(setting);
       s.id = `${setting.namespace}.${setting.key}`;
       s.name = getGame().i18n?.localize(setting.name || "") || "";
       s.hint = getGame().i18n?.localize(setting.hint || "") || "";
-      // @ts-ignore - FoundryVTT API
+      // @ts-expect-error - FoundryVTT API
       s.value = getGame().settings.get(setting.namespace, setting.key);
       s.settingType =
         setting.type instanceof Function ? setting.type.name : "String";
@@ -49,11 +48,11 @@ export default class LiveKitAVConfig extends AVConfig {
     return liveKitSettings;
   }
 
-  // @ts-ignore - FoundryVTT API
+  // @ts-expect-error - FoundryVTT API
   async getData(options: any = {}): Promise<Record<string, unknown>> {
-    // @ts-ignore - FoundryVTT API
+    // @ts-expect-error - FoundryVTT API
     const data = await super.getData(options);
-    // @ts-ignore - FoundryVTT API
+    // @ts-expect-error - FoundryVTT API
     return foundry.utils.mergeObject(data, {
       isVersion10AV: isVersion10AV(),
       liveKitServerTypes: getGame().webrtc?.client._liveKitClient?.liveKitServerTypes,
@@ -63,9 +62,9 @@ export default class LiveKitAVConfig extends AVConfig {
   }
 
   /** @override */
-  // @ts-ignore - FoundryVTT API
+  // @ts-expect-error - FoundryVTT API
   activateListeners(html: JQuery<HTMLElement>) {
-    // @ts-ignore - FoundryVTT API
+    // @ts-expect-error - FoundryVTT API
     super.activateListeners(html);
 
     // Options below are GM only
@@ -329,7 +328,7 @@ export default class LiveKitAVConfig extends AVConfig {
 
   /** @override */
   async _updateObject(event: Event, formData: object) {
-    // @ts-ignore - FoundryVTT API
+    // @ts-expect-error - FoundryVTT API
     for (const [k, v] of Object.entries(
       foundry.utils.flattenObject(formData)
     )) {
@@ -337,11 +336,11 @@ export default class LiveKitAVConfig extends AVConfig {
       if (s?.namespace !== MODULE_NAME) continue;
       const current = getGame().settings.get(s.namespace, s.key);
       if (v === current) continue;
-      // @ts-ignore - FoundryVTT API
+      // @ts-expect-error - FoundryVTT API
       await getGame().settings.set(s.namespace, s.key, v);
     }
 
-    // @ts-ignore - FoundryVTT API
+    // @ts-expect-error - FoundryVTT API
     await super._updateObject(event, formData);
   }
 }

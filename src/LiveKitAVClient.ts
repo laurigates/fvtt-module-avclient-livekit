@@ -1,4 +1,3 @@
-// @ts-nocheck - Disable type checking for FoundryVTT API compatibility
 import {
   LogLevel,
   RemoteAudioTrack,
@@ -92,7 +91,7 @@ export default class LiveKitAVClient extends AVClient {
     }
 
     // Don't fully initialize if client has enabled the option to use the external web client
-    // @ts-ignore - FoundryVTT API
+    // @ts-expect-error - FoundryVTT API
     if (getGame().settings.get(MODULE_NAME, "useExternalAV")) {
       log.debug("useExternalAV set, not initializing LiveKitClient");
       this._liveKitClient.useExternalAV = true;
@@ -323,12 +322,12 @@ export default class LiveKitAVClient extends AVClient {
     };
 
     // Get disable audio/video settings
-    // @ts-ignore - FoundryVTT API
+    // @ts-expect-error - FoundryVTT API
     const disableReceivingAudio = getGame().settings.get(
       MODULE_NAME,
       "disableReceivingAudio"
     ) as boolean;
-    // @ts-ignore - FoundryVTT API
+    // @ts-expect-error - FoundryVTT API
     const disableReceivingVideo = getGame().settings.get(
       MODULE_NAME,
       "disableReceivingVideo"
@@ -355,7 +354,7 @@ export default class LiveKitAVClient extends AVClient {
       }
     }
 
-    // @ts-ignore - FoundryVTT API
+    // @ts-expect-error - FoundryVTT API
     if (
       getGame().settings.get(MODULE_NAME, "debug") &&
       getGame().settings.get(MODULE_NAME, "liveKitTrace")
@@ -515,7 +514,7 @@ export default class LiveKitAVClient extends AVClient {
     log.debug("getConnectedUsers");
 
     // If useExternalAV is enabled, return empty array
-    // @ts-ignore - FoundryVTT API
+    // @ts-expect-error - FoundryVTT API
     if (getGame().settings.get(MODULE_NAME, "useExternalAV")) {
       return [];
     }
@@ -755,7 +754,7 @@ export default class LiveKitAVClient extends AVClient {
    */
   onSettingsChanged(changed: Record<string, unknown>): void {
     log.debug("onSettingsChanged:", changed);
-    // @ts-ignore - FoundryVTT API
+    // @ts-expect-error - FoundryVTT API
     const keys = new Set(Object.keys(foundry.utils.flattenObject(changed)));
 
     // Change in the server configuration; reconnect
@@ -802,9 +801,9 @@ export default class LiveKitAVClient extends AVClient {
       this.master.render();
 
     // Refresh the main settings page if it is open, in case one of our settings has changed
-    // @ts-ignore - FoundryVTT API
+    // @ts-expect-error - FoundryVTT API
     if (getGame().settings.sheet.rendered) {
-      // @ts-ignore - FoundryVTT API
+      // @ts-expect-error - FoundryVTT API
       getGame().settings.sheet.render();
     }
   }

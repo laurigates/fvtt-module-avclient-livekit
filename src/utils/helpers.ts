@@ -1,4 +1,3 @@
-// @ts-nocheck - Disable type checking for FoundryVTT API compatibility
 import { LANG_NAME, MODULE_NAME } from "./constants";
 import * as log from "./logging";
 
@@ -134,7 +133,7 @@ export async function loadScript(scriptSrc: string): Promise<boolean> {
 export function registerModuleSetting<T>(
   settingsObject: ModuleSettingsObject<T>
 ): void {
-  // @ts-ignore - FoundryVTT API
+  // @ts-expect-error - FoundryVTT API
   getGame().settings.register(MODULE_NAME, settingsObject.name, {
     name: `${LANG_NAME}.${settingsObject.name}`,
     hint: `${LANG_NAME}.${settingsObject.name}Hint`,

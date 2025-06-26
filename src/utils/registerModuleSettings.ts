@@ -1,4 +1,3 @@
-// @ts-nocheck - Disable type checking for FoundryVTT API compatibility
 import { MODULE_NAME } from "./constants";
 import { delayReload, getGame, registerModuleSetting } from "./helpers";
 import * as log from "./logging";
@@ -29,7 +28,7 @@ export default function registerModuleSettings(): void {
   registerModuleSetting<number>({
     name: "audioMusicModeRate",
     scope: "client",
-    // @ts-ignore - FoundryVTT API
+    // @ts-expect-error - FoundryVTT API
     config: getGame().settings.get(MODULE_NAME, "audioMusicMode") === true,
     default: 96,
     type: Number,
