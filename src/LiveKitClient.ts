@@ -92,7 +92,7 @@ export default class LiveKitClient {
     this.liveKitAvClient = liveKitAvClient;
     this.settings = liveKitAvClient.settings;
 
-    this.render = debounce(
+    this.render = foundry.utils.debounce(
       this.avMaster.render.bind(this.liveKitAvClient),
       2000
     );
@@ -193,7 +193,7 @@ export default class LiveKitClient {
         connectionQualityIndicator.addClass("is-version-10-av");
 
         // @ts-expect-error Expecting error until foundry-vtt-types is updated for FVTT v10
-        const nameplateModes = AVSettings.NAMEPLATE_MODES;
+        const nameplateModes = (foundry.av?.AVSettings?.NAMEPLATE_MODES) || AVSettings.NAMEPLATE_MODES;
         const nameplateSetting =
           // @ts-expect-error Expecting error until foundry-vtt-types is updated for FVTT v10
           this.settings.client.nameplates ?? nameplateModes.BOTH;
@@ -1222,6 +1222,8 @@ export default class LiveKitClient {
     const box = input.closest(".camera-view");
     const volume = (typeof AudioHelper !== 'undefined' && AudioHelper.inputToVolume) 
       ? AudioHelper.inputToVolume(input.value)
+      : (foundry.audio?.AudioHelper?.inputToVolume) 
+      ? foundry.audio.AudioHelper.inputToVolume(input.value)
       : parseFloat(input.value) / 100; // Fallback conversion
     const audioElements: HTMLCollection = box.getElementsByTagName("audio");
     for (const audioElement of audioElements) {

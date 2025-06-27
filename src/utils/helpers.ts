@@ -33,7 +33,7 @@ interface ModuleSettingsObject<T = unknown> {
  * Issue a delayed (debounced) reload to the whole window.
  * Allows settings to get saved before reload
  */
-export const delayReload: () => void = debounce(
+export const delayReload: () => void = foundry.utils.debounce(
   () => window.location.reload(),
   100
 );
@@ -78,7 +78,8 @@ export function getCanvas(): Canvas {
 }
 
 export function getGame(): Game {
-  if (!(game instanceof Game)) {
+  const GameClass = foundry.Game || Game;
+  if (!(game instanceof GameClass)) {
     throw new Error("Game is not yet initialized.");
   }
   return game;
@@ -92,11 +93,19 @@ export function isVersion10AV(): boolean {
   );
 }
 
-// Returns if the current version is using the new v10 AV
+// Returns if the current version is using the new v11 AV
 export function isVersion11AV(): boolean {
   return foundry.utils.isNewerVersion(
     getGame().release?.version || getGame().data?.version || "0",
     "11.292"
+  );
+}
+
+// Returns if the current version is v13 or newer
+export function isVersion13Plus(): boolean {
+  return foundry.utils.isNewerVersion(
+    getGame().release?.version || getGame().data?.version || "0",
+    "12.999"
   );
 }
 

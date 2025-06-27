@@ -22,7 +22,7 @@ import LiveKitAVConfig from "./LiveKitAVConfig";
  * @param {AVMaster} master           The master orchestration instance
  * @param {AVSettings} settings       The audio/video settings being used
  */
-export default class LiveKitAVClient extends AVClient {
+export default class LiveKitAVClient extends (foundry.av?.AVClient || AVClient) {
   _liveKitClient: LiveKitClient;
   room: string | null;
   tempError: unknown;
@@ -113,7 +113,11 @@ export default class LiveKitAVClient extends AVClient {
     await this._liveKitClient.initializeLocalTracks();
 
     // Initialize the AVSettings to ensure muted & hidden states are correct
-    this.settings.initialize();
+    if (typeof this.settings.initialize === 'function') {
+      this.settings.initialize();
+    } else {
+      log.debug("AVSettings.initialize() not available, likely v13+ - skipping initialization");
+    }
 
     this._liveKitClient.initState = InitState.Initialized;
     Hooks.callAll("liveKitClientInitialized" as any, this._liveKitClient);

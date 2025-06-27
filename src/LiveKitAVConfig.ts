@@ -3,7 +3,7 @@ import { LANG_NAME, MODULE_NAME, TAVERN_AUTH_SERVER } from "./utils/constants";
 import { delayReload, getGame, isVersion10AV } from "./utils/helpers";
 import * as log from "./utils/logging";
 
-export default class LiveKitAVConfig extends AVConfig {
+export default class LiveKitAVConfig extends (foundry.applications?.settings?.menus?.AVConfig || AVConfig) {
   /** @override */
   static get defaultOptions() {
     // @ts-expect-error - FoundryVTT API

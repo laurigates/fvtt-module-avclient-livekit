@@ -15,13 +15,13 @@
       "twitter": "@bekit"
     }
   ],
-  "version": "0.5.31",
+  "version": "0.5.32",
   "compatibility": {
     "minimum": "9.238",
-    "verified": "12"
+    "verified": "13"
   },
   "minimumCoreVersion": "9.238",
-  "compatibleCoreVersion": "12",
+  "compatibleCoreVersion": "13",
   "manifestPlusVersion": "1.2.0",
   "esmodules": ["avclient-livekit.bundle.js"],
   "styles": ["css/avclient-livekit.css"],
