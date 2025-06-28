@@ -1,0 +1,47 @@
+{
+  "id": "avclient-livekit",
+  "name": "avclient-livekit",
+  "title": "LiveKit AVClient",
+  "description": "Use LiveKit to handle A/V",
+  "author": "{{AUTHOR_NAME}}",
+  "authors": [
+    {
+      "name": "{{AUTHOR_NAME}}",
+      "email": "{{AUTHOR_EMAIL}}",
+      "url": "https://{{GITHUB_USERNAME}}.github.io",
+      "discord": "{{AUTHOR_DISCORD}}",
+      "patreon": "{{AUTHOR_PATREON}}",
+      "ko-fi": "{{AUTHOR_KOFI}}",
+      "twitter": "{{AUTHOR_TWITTER}}"
+    }
+  ],
+  "version": "{{MODULE_VERSION}}",
+  "compatibility": {
+    "minimum": "9.238",
+    "verified": "13"
+  },
+  "minimumCoreVersion": "9.238",
+  "compatibleCoreVersion": "13",
+  "manifestPlusVersion": "1.2.0",
+  "esmodules": ["avclient-livekit.bundle.js"],
+  "styles": ["css/avclient-livekit.css"],
+  "socket": true,
+  "url": "https://github.com/{{GITHUB_USERNAME}}/{{GITHUB_REPOSITORY}}",
+  "manifest": "https://github.com/{{GITHUB_USERNAME}}/{{GITHUB_REPOSITORY}}/releases/latest/download/module.json",
+  "download": "https://github.com/{{GITHUB_USERNAME}}/{{GITHUB_REPOSITORY}}/releases/latest/download/fvtt-module-avclient-livekit.zip",
+  "readme": "https://github.com/{{GITHUB_USERNAME}}/{{GITHUB_REPOSITORY}}/blob/main/README.md",
+  "changelog": "https://github.com/{{GITHUB_USERNAME}}/{{GITHUB_REPOSITORY}}/blob/main/CHANGELOG.md",
+  "bugs": "https://github.com/{{GITHUB_USERNAME}}/{{GITHUB_REPOSITORY}}/issues",
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    },
+    {
+      "lang": "es",
+      "name": "Español",
+      "path": "lang/es.json"
+    }
+  ]
+}

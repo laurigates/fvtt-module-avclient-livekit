@@ -1,6 +1,7 @@
 const CopyPlugin = require("copy-webpack-plugin");
 const path = require("path");
 const webpack = require("webpack");
+const { processTemplate } = require("./scripts/process-template");
 
 module.exports = {
   target: "browserslist",
@@ -14,6 +15,28 @@ module.exports = {
     clean: true,
   },
   plugins: [
+    // Process module.json template and add to webpack assets
+    {
+      apply: (compiler) => {
+        compiler.hooks.compilation.tap('ProcessTemplate', (compilation) => {
+          compilation.hooks.processAssets.tap(
+            {
+              name: 'ProcessTemplate',
+              stage: compiler.webpack.Compilation.PROCESS_ASSETS_STAGE_ADDITIONAL
+            },
+            () => {
+              const { processTemplateToString } = require("./scripts/process-template");
+              const moduleJsonContent = processTemplateToString();
+              
+              compilation.emitAsset('module.json', {
+                source: () => moduleJsonContent,
+                size: () => moduleJsonContent.length
+              });
+            }
+          );
+        });
+      }
+    },
     new CopyPlugin({
       patterns: [
         { from: "css/", to: "css/" },
@@ -21,7 +44,6 @@ module.exports = {
         { from: "templates/", to: "templates/" },
         { from: "web-client/", to: "web-client/" },
         { from: "*.md" },
-        { from: "module.json" },
         { from: "LICENSE*" },
       ],
     }),
