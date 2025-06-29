@@ -15,7 +15,7 @@
       "twitter": "{{AUTHOR_TWITTER}}"
     }
   ],
-  "version": "{{MODULE_VERSION}}",
+  "version": "0.6.0",
   "compatibility": {
     "minimum": "9.238",
     "verified": "13"
@@ -23,8 +23,12 @@
   "minimumCoreVersion": "9.238",
   "compatibleCoreVersion": "13",
   "manifestPlusVersion": "1.2.0",
-  "esmodules": ["avclient-livekit.bundle.js"],
-  "styles": ["css/avclient-livekit.css"],
+  "esmodules": [
+    "avclient-livekit.bundle.js"
+  ],
+  "styles": [
+    "css/avclient-livekit.css"
+  ],
   "socket": true,
   "url": "https://github.com/{{GITHUB_USERNAME}}/{{GITHUB_REPOSITORY}}",
   "manifest": "https://github.com/{{GITHUB_USERNAME}}/{{GITHUB_REPOSITORY}}/releases/latest/download/module.json",
