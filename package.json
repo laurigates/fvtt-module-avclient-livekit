@@ -1,6 +1,6 @@
 {
   "name": "avclient-livekit",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "LiveKit A/V module for FoundryVTT",
   "private": true,
   "repository": "https://github.com/laurigates/fvtt-module-avclient-livekit",
