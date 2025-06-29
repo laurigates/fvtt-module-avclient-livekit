@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
@@ -5,7 +6,7 @@ const { execSync } = require('child_process');
 function getGitConfig(key, fallback = '') {
   try {
     return execSync(`git config --get ${key}`, { encoding: 'utf8' }).trim();
-  } catch (error) {
+  } catch {
     return fallback;
   }
 }
@@ -23,8 +24,8 @@ function getGitRemoteInfo() {
     } else if (httpsMatch) {
       return { username: httpsMatch[1], repository: httpsMatch[2] };
     }
-  } catch (error) {
-    console.warn('Could not parse git remote URL:', error.message);
+  } catch {
+    console.warn('Could not parse git remote URL');
   }
   
   return { username: 'bekriebel', repository: 'fvtt-module-avclient-livekit' };
@@ -34,8 +35,8 @@ function getPackageVersion() {
   try {
     const packageJson = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'package.json'), 'utf8'));
     return packageJson.version || '0.5.32';
-  } catch (error) {
-    console.warn('Could not read package.json version:', error.message);
+  } catch {
+    console.warn('Could not read package.json version');
     return '0.5.32';
   }
 }

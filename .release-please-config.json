@@ -1,0 +1,55 @@
+{
+  "packages": {
+    ".": {
+      "release-type": "node",
+      "package-name": "avclient-livekit",
+      "changelog-sections": [
+        {
+          "type": "feat",
+          "section": "Features"
+        },
+        {
+          "type": "fix",
+          "section": "Bug Fixes"
+        },
+        {
+          "type": "refactor",
+          "section": "Code Refactoring"
+        },
+        {
+          "type": "perf",
+          "section": "Performance Improvements"
+        },
+        {
+          "type": "docs",
+          "section": "Documentation"
+        },
+        {
+          "type": "deps",
+          "section": "Dependencies"
+        },
+        {
+          "type": "chore",
+          "hidden": true
+        }
+      ],
+      "extra-files": [
+        {
+          "type": "json",
+          "path": "module.json.template",
+          "jsonpath": "$.version"
+        }
+      ],
+      "include-component-in-tag": false,
+      "include-v-in-tag": true
+    }
+  },
+  "changelog-host": "https://github.com",
+  "changelog-path": "CHANGELOG.md",
+  "separate-pull-requests": false,
+  "tag-separator": "/",
+  "bump-minor-pre-major": false,
+  "bump-patch-for-minor-pre-major": false,
+  "draft": false,
+  "prerelease": false
+}
