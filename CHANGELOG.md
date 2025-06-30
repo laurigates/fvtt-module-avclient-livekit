@@ -1,5 +1,38 @@
 # Changelog
 
+## [0.9.0](https://github.com/laurigates/fvtt-module-avclient-livekit/compare/v0.8.0...v0.9.0) (2025-06-30)
+
+
+### Features
+
+* Add dynamic module.json templating for fork customization ([fc129d4](https://github.com/laurigates/fvtt-module-avclient-livekit/commit/fc129d40eda986bdcd93383e9c4da1fc82c9ff51))
+* Add release-please automation for semantic versioning and automated releases ([1eb7614](https://github.com/laurigates/fvtt-module-avclient-livekit/commit/1eb76142cdad4c5a7266a5e6ede810f192176fb7))
+* Streamline GitHub Actions workflow and enhance CI/CD pipeline ([cc9e73f](https://github.com/laurigates/fvtt-module-avclient-livekit/commit/cc9e73f789e1151f7e124023de0f3ef4c9c5bfd1))
+
+
+### Bug Fixes
+
+* Add custom manifest validation script to resolve CI pipeline error ([916b5d0](https://github.com/laurigates/fvtt-module-avclient-livekit/commit/916b5d0645847043b9f4141d09c39738038e0558))
+* Add FoundryVTT v13+ compatibility and resolve deprecation warnings ([bdaafb1](https://github.com/laurigates/fvtt-module-avclient-livekit/commit/bdaafb13e8c88fc6f445351f5950e323a38002f3))
+* Additional LiveKit v2 API compatibility improvements ([e8386ae](https://github.com/laurigates/fvtt-module-avclient-livekit/commit/e8386aeb338a8fd4d655c4810009f1ea13d397ef))
+* linter errors and warnings ([54ac510](https://github.com/laurigates/fvtt-module-avclient-livekit/commit/54ac5106b9b1c1b2c3299ec9970030e61ead9a54))
+* remove failing validation ([995f9f9](https://github.com/laurigates/fvtt-module-avclient-livekit/commit/995f9f99653c1147790f5b14d7ffb05f3c4a95e0))
+* Remove inactive manifest validation and resolve TypeScript errors ([9a74ed6](https://github.com/laurigates/fvtt-module-avclient-livekit/commit/9a74ed6ca61a1dba3e26916c4219499e8841a1d1))
+* Rename ESLint config to .mjs to resolve ES module import error ([51bfee3](https://github.com/laurigates/fvtt-module-avclient-livekit/commit/51bfee38a8a54a5c3f2bec1da68c12b41b8ed355))
+* Resolve critical LiveKit v2 API compatibility issues ([3a871a1](https://github.com/laurigates/fvtt-module-avclient-livekit/commit/3a871a1d3eccd61ca9af8aa32df348988cd39b81))
+* Resolve ESLint errors and improve TypeScript typing ([d88959b](https://github.com/laurigates/fvtt-module-avclient-livekit/commit/d88959b547af3240cea53734fd4de4c474f233ef))
+* Resolve FoundryVTT API compatibility and settings namespace issues ([ac0e950](https://github.com/laurigates/fvtt-module-avclient-livekit/commit/ac0e950f742573265356af2f7ef45fa8e9edfca4))
+* Resolve major TypeScript compatibility issues ([5b8fe81](https://github.com/laurigates/fvtt-module-avclient-livekit/commit/5b8fe810b17102e7c7364d767d9297f3f858589a))
+* Resolve null safety and FoundryVTT type compatibility issues ([a40bc6f](https://github.com/laurigates/fvtt-module-avclient-livekit/commit/a40bc6fdb503d706e80e6ddee62a8bac5fc686ba))
+* Resolve TypeScript compatibility issues with LiveKit v2 and FoundryVTT ([bdb2fcf](https://github.com/laurigates/fvtt-module-avclient-livekit/commit/bdb2fcf1a2c793f5fe0e99f935e1a98c902f16d0))
+* Resolve TypeScript compilation errors for FoundryVTT API compatibility ([53890d5](https://github.com/laurigates/fvtt-module-avclient-livekit/commit/53890d5a42d1985fa665560de5bb8985a69cd04c))
+
+
+### Code Refactoring
+
+* Remove Yarn dependency and switch to npm-only workflow ([6612361](https://github.com/laurigates/fvtt-module-avclient-livekit/commit/66123616b17a489bc3b2726cb60cc5eccf4f09f9))
+* Replace [@ts-nocheck](https://github.com/ts-nocheck) with targeted [@ts-expect-error](https://github.com/ts-expect-error) comments ([e58ae0b](https://github.com/laurigates/fvtt-module-avclient-livekit/commit/e58ae0b37ae8f92096cfe7fe63ac733dfe1b46ad))
+
 ## [0.8.0](https://github.com/laurigates/fvtt-module-avclient-livekit/compare/v0.7.0...v0.8.0) (2025-06-30)
 
 
