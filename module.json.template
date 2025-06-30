@@ -15,7 +15,7 @@
       "twitter": "{{AUTHOR_TWITTER}}"
     }
   ],
-  "version": "0.7.0",
+  "version": "0.8.0",
   "compatibility": {
     "minimum": "9.238",
     "verified": "13"
